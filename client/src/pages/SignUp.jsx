@@ -89,6 +89,7 @@ const SignUp = () => {
                 placeholder="**********"
                 id="password"
                 onChange={handleChange}
+                autoComplete="on"
               />
             </div>
             <Button

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { Alert, Button, Label, Spinner, TextInput } from "flowbite-react";
+import { Alert, Button, TextInput } from "flowbite-react";
 import {
   getDownloadURL,
   getStorage,
@@ -17,8 +17,6 @@ const DashProfile = () => {
   const [imageFileUrl, setimageFileUrl] = useState(null);
   const [imageFileUploadProgress, setimageFileUploadProgress] = useState(0);
   const [imageFileUploadError, setimageFileUploadError] = useState(null);
-
-  console.log(imageFileUploadProgress, imageFileUploadError);
 
   const filePickerRef = useRef();
 
@@ -104,11 +102,7 @@ const DashProfile = () => {
           ) : null}
 
           <img
-            src={
-              imageFileUrl ||
-              currentUser.profileAvatar ||
-              "https://static.vecteezy.com/system/resources/previews/024/183/525/non_2x/avatar-of-a-man-portrait-of-a-young-guy-illustration-of-male-character-in-modern-color-style-vector.jpg"
-            }
+            src={imageFileUrl || currentUser.profileAvatar}
             alt="user"
             className={`rounded-full w-full h-full border-8 border-[lightgray] object-cover ${
               imageFileUploadProgress &&

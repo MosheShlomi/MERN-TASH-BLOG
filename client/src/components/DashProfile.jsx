@@ -21,9 +21,10 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { Link } from "react-router-dom";
 
 const DashProfile = () => {
-  const { currentUser, error } = useSelector((state) => state.user);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
   const [imageFile, setImageFile] = useState(null);
   const [imageFileUrl, setimageFileUrl] = useState(null);
   const [imageFileUploadProgress, setimageFileUploadProgress] = useState(0);
@@ -231,9 +232,23 @@ const DashProfile = () => {
           id="password"
           onChange={handleChange}
         />
-        <Button gradientDuoTone="purpleToBlue" type="submit" outline>
-          Update
+        <Button
+          gradientDuoTone="purpleToBlue"
+          type="submit"
+          outline
+          disabled={loading || imageFileUploading}>
+          {loading ? "Loading..." : "Update"}
         </Button>
+        {currentUser.isAdmin && (
+          <Link to="/create-post">
+            <Button
+              gradientDuoTone="purpleToPink"
+              type="button"
+              className="w-full">
+              Create a post
+            </Button>
+          </Link>
+        )}
       </form>
 
       <div className="text-red-500 flex justify-between mt-5">

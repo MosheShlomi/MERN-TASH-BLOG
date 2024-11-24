@@ -43,8 +43,6 @@ const CreatePost = () => {
     },
   };
 
-  console.log(formData);
-
   const handleUploadImage = async () => {
     try {
       if (!file) {
@@ -188,7 +186,6 @@ const CreatePost = () => {
           ]}
           modules={modules}
           onChange={(value) => setFormData({ ...formData, content: value })}
-          // value={content}
         />
 
         <Button type="submit" gradientDuoTone="purpleToPink">

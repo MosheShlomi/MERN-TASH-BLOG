@@ -55,7 +55,6 @@ const DashSidebar = () => {
                 active={tab === "posts"}
                 icon={HiDocumentText}
                 className="cursor-pointer"
-                // onClick={handleSignOut}
                 as="div">
                 Posts
               </Sidebar.Item>

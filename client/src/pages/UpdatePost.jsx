@@ -231,7 +231,9 @@ const UpdatePost = () => {
 
       <div>
         <h2 className="text-xl font-bold flex justify-center mt-8">Preview</h2>
-        {/* <div dangerouslySetInnerHTML={{ __html: content }}></div> */}
+        <div
+          className="max-w-3xl mx-auto w-full post-content"
+          dangerouslySetInnerHTML={{ __html: formData.content }}></div>
       </div>
     </div>
   );

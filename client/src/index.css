@@ -8,9 +8,14 @@ body {
 
 .ql-editor {
   font-size: 1.05rem;
-  direction: rtl;
-  text-align: right;
+  /* direction: rtl;
+  text-align: right; */
 }
+
+/* .post-content { */
+  /* direction: rtl; */
+  /* text-align: right; */
+/* } */
 
 .post-content p {
   margin-bottom: 0.5rem;

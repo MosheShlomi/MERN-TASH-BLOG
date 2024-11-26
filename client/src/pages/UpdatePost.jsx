@@ -130,6 +130,8 @@ const UpdatePost = () => {
     }
   };
 
+  console.log(formData);
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">Update post</h1>
@@ -229,7 +231,9 @@ const UpdatePost = () => {
 
       <div>
         <h2 className="text-xl font-bold flex justify-center mt-8">Preview</h2>
-        {/* <div dangerouslySetInnerHTML={{ __html: content }}></div> */}
+        <div
+          className="max-w-3xl mx-auto w-full post-content"
+          dangerouslySetInnerHTML={{ __html: formData.content }}></div>
       </div>
     </div>
   );

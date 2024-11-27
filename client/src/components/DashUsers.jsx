@@ -96,7 +96,7 @@ function DashUsers() {
                     </span>
                   </Table.Cell>
                   <Table.Cell>{user.email}</Table.Cell>
-                  <Table.Cell>
+                  <Table.Cell className="mx-auto">
                     {user.isAdmin ? (
                       <FaCheck className="text-green-500" />
                     ) : (

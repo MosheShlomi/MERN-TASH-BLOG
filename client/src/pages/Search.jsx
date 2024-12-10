@@ -110,30 +110,32 @@ function Search() {
     <div className="flex flex-col md:flex-row">
       <div className="p-7 border-b md:border-ri md:min-h-screen border-gray-500">
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
-          <div className="flex items-center gap-2 ">
-            <label className="whitespace-nowrap font-semibold">
-              Search Term
+          <div className="flex items-center gap-2">
+            <label className="whitespace-nowrap font-semibold flex-1">
+              טקסט חיפוש:
             </label>
             <TextInput
-              placeholder="Search..."
+              placeholder="חיפוש..."
               id="searchTerm"
               type="text"
               value={sideBarData.searchTerm}
               onChange={handleChange}
+              className="flex-1"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label className="whitespace-nowrap font-semibold">Sort:</label>
-            <Select onChange={handleChange} value={sideBarData.sort} id="sort">
+            <label className="whitespace-nowrap font-semibold flex-1">סדר:</label>
+            <Select onChange={handleChange} value={sideBarData.sort} id="sort" className="flex-1">
               <option value="desc">Latest</option>
               <option value="asc">Oldest</option>
             </Select>
           </div>
           <div className="flex items-center gap-2">
-            <label className="whitespace-nowrap font-semibold">Category:</label>
+            <label className="whitespace-nowrap font-semibold flex-1">קטגוריה:</label>
             <Select
               onChange={handleChange}
               value={sideBarData.category}
+              className="flex-1"
               id="category">
               <option value="uncategorized">Uncategorized</option>
               <option value="תשמש">תשמש</option>
@@ -141,20 +143,20 @@ function Search() {
               <option value="חוגר">חוגר</option>
             </Select>
           </div>
-            <Button type="submit" outline gradientDuoTone="purpleToPink">
-              Apply filters
-            </Button>
+          <Button type="submit" outline gradientDuoTone="purpleToPink">
+            חפש
+          </Button>
         </form>
       </div>
       <div className="w-full">
         <h1 className="text-3xl font-semibold sm:border-b border-gray-500 p-3 m-5">
-          Posts results:
+          תוצאות החיפוש
         </h1>
-        <div className="p-7 flex flex-wrap gap-4">
+        <div className="p-7 flex flex-wrap gap-4 justify-center">
           {!loading && posts.length === 0 && (
             <p className="text-xl text-gray-500">No posts found.</p>
           )}
-          {loading && <p className="text-xl text-gray-500">Loading...</p>}
+          {loading && <p className="text-xl text-gray-500">טוען...</p>}
           {!loading &&
             posts &&
             posts.map((post) => <PostCard key={post._id} post={post} />)}
@@ -163,7 +165,7 @@ function Search() {
             <button
               className="text-teal-500 text-lg hover:underline p-7 w-full"
               onClick={handleShowMore}>
-              Show More
+              הצג עוד
             </button>
           )}
         </div>

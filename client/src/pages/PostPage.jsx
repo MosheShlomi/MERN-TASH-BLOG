@@ -77,9 +77,16 @@ function PostPage() {
         className="mt-5 p-3 max-h-[600px] w-full max-w-2xl mx-auto object-cover"
       />
       <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">
-        <span>{post && new Date(post.createdAt).toLocaleDateString()}</span>
+        <span>
+          {post &&
+            new Date(post.createdAt).toLocaleDateString("he-IL", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })}
+        </span>
         <span className="italic">
-          {post && (post.content.length / 1000).toFixed(0)} mins read
+          {post && (post.content.length / 1000).toFixed(0)} דקות קריאה
         </span>
       </div>
 
@@ -91,7 +98,7 @@ function PostPage() {
       </div>
       <CommentSection postId={post._id} />
       <div className="flex flex-col justify-center items-center mb-5">
-        <h1 className="text-xl mt-5">Recent articles</h1>
+        <h1 className="text-xl mt-5">פוסטים אחרונים</h1>
         <div className="flex flex-wrap gap-5 mt-5 justify-center items-center">
           {recentPosts &&
             recentPosts.map((post) => <PostCard key={post._id} post={post} />)}

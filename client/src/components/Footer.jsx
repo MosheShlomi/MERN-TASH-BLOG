@@ -13,30 +13,27 @@ const FooterComponent = () => {
               to="/"
               className="self-center whitespace-nowrap text-lg sm:text-xl font-semibold dark:text-white">
               <span className="px-2 py-1 bg-gradient-to-r from-red-500 via-green-500 to-blue-500  rounded-lg text-white">
-                Tash
+                ת"ש
               </span>{" "}
-              Blog
+              בלוג
             </Link>
           </div>
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 sm:gap-6">
             <div>
-              <Footer.Title title="About" />
+              <Footer.Title title="זכויות ומידע" />
               <Footer.LinkGroup col>
-                <Footer.Link
-                  href="https://google.com"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  100 JS Projects
+                <Footer.Link href="#" target="_blank" rel="noopener noreferrer">
+                  סיוע כלכלי
                 </Footer.Link>
                 <Footer.Link
-                  href="https://google.com"
+                  href="https://www.nadan.org.il/"
                   target="_blank"
                   rel="noopener noreferrer">
-                  My Blog
+                  סיוע משפטי
                 </Footer.Link>
               </Footer.LinkGroup>
             </div>
-            <div>
+            {/* <div>
               <Footer.Title title="Follow us" />
               <Footer.LinkGroup col>
                 <Footer.Link
@@ -45,25 +42,19 @@ const FooterComponent = () => {
                   rel="noopener noreferrer">
                   Github
                 </Footer.Link>
-                <Footer.Link
-                  href="https://google.com"
-                  target="_blank"
-                  rel="noopener noreferrer">
+                <Footer.Link href="#" target="_blank" rel="noopener noreferrer">
                   Linkedin
                 </Footer.Link>
               </Footer.LinkGroup>
-            </div>
+            </div> */}
             <div>
-              <Footer.Title title="Legal" />
+              <Footer.Title title="על הבלוג" />
               <Footer.LinkGroup col>
                 <Footer.Link href="#" target="_blank" rel="noopener noreferrer">
-                  Privacy Policy
+                ✍️ אודות הבלוג
                 </Footer.Link>
-                <Footer.Link
-                  href="https://google.com"
-                  target="_blank"
-                  rel="noopener noreferrer">
-                  Terms &amp; Conditions
+                <Footer.Link href="#" target="_blank" rel="noopener noreferrer">
+                  📞 צור קשר
                 </Footer.Link>
               </Footer.LinkGroup>
             </div>
@@ -80,7 +71,6 @@ const FooterComponent = () => {
             <Footer.Icon href="#" icon={BsFacebook} />
             <Footer.Icon href="#" icon={BsLinkedin} />
             <Footer.Icon href="#" icon={BsInstagram} />
-            <Footer.Icon href="#" icon={BsGithub} />
           </div>
         </div>
       </div>

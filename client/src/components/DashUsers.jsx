@@ -80,7 +80,11 @@ function DashUsers() {
               <Table.Body className="divide-y" key={`${user._id}-${index}`}>
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
-                    {new Date(user.createdAt).toLocaleDateString()}
+                    {new Date(user.createdAt).toLocaleDateString("he-IL", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    })}
                   </Table.Cell>
                   <Table.Cell>
                     <img
@@ -120,12 +124,12 @@ function DashUsers() {
             <button
               onClick={handleShowMore}
               className="w-full text-teal-500 self-center py-7 text-sm ">
-              Show more
+              הצג עוד
             </button>
           )}
         </>
       ) : (
-        <p>You have no users yet!</p>
+        <p>אין לך עדיין משתמשים!</p>
       )}
       <Modal
         show={showModal}
@@ -137,14 +141,14 @@ function DashUsers() {
           <div className="text-center">
             <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete this user?
+              האם אתה בטוח שברצונך למחוק משתמש זה?
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={handleDeleteUser}>
-                Yes, I am
+                כן, בהחלט
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
-                No, cancel
+                לא, בטל
               </Button>
             </div>
           </div>

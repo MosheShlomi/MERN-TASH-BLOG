@@ -33,7 +33,6 @@ const OAuth = () => {
         dispatch(signInSuccess(data));
         navigate("/");
       }
-      console.log(result);
     } catch (err) {
       console.log(err);
     }
@@ -45,8 +44,8 @@ const OAuth = () => {
       gradientDuoTone="pinkToOrange"
       outline
       onClick={handleClick}>
+      התחברות עם Google
       <AiFillGoogleCircle className="w-6 h-6 mr-2" />
-      Continue with Google
     </Button>
   );
 };

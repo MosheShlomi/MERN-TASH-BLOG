@@ -54,22 +54,26 @@ const Header = () => {
         to="/"
         className="self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white">
         <span className="px-2 py-1 bg-gradient-to-r from-red-500 via-green-500 to-blue-500  rounded-lg text-white">
-          Tash
+          ת"ש
         </span>{" "}
-        Blog
+        בלוג
       </Link>
 
       <form onSubmit={handleSubmit}>
         <TextInput
           type="search"
-          placeholder="Search..."
+          placeholder="חיפוש..."
           rightIcon={AiOutlineSearch}
           className="hidden lg:inline"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </form>
-      <Button className="w-12 h-10 lg:hidden" color="gray" pill>
+      <Button
+        className="w-12 h-10 lg:hidden"
+        color="gray"
+        pill
+        onClick={() => navigate("/search")}>
         <AiOutlineSearch />
       </Button>
 
@@ -95,16 +99,24 @@ const Header = () => {
                 {currentUser.email}
               </span>
             </Dropdown.Header>
+            {currentUser && currentUser.isAdmin && (
+              <>
+                <Link to={"/dashboard?tab=dash"}>
+                  <Dropdown.Item>Dashboard</Dropdown.Item>
+                </Link>
+                <Dropdown.Divider />
+              </>
+            )}
             <Link to={"/dashboard?tab=profile"}>
-              <Dropdown.Item>Profile</Dropdown.Item>
+              <Dropdown.Item>פרופיל</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
-            <Dropdown.Item onClick={handleSignOut}>Sign Out</Dropdown.Item>
+            <Dropdown.Item onClick={handleSignOut}>יציאה</Dropdown.Item>
           </Dropdown>
         ) : (
           <Link to="/sign-in">
             <Button className="" gradientDuoTone="purpleToBlue" outline>
-              Sign In
+              כניסה
             </Button>
           </Link>
         )}
@@ -113,13 +125,15 @@ const Header = () => {
       </div>
       <Navbar.Collapse>
         <Navbar.Link active={path === "/"} as={"div"}>
-          <Link to="/">Home</Link>
+          <Link to="/" className="ml-5">
+            עמוד הבית
+          </Link>
         </Navbar.Link>
         <Navbar.Link active={path === "/about"} as={"div"}>
-          <Link to="/about">About</Link>
+          <Link to="/about">נעים להכיר</Link>
         </Navbar.Link>
         <Navbar.Link active={path === "/projects"} as={"div"}>
-          <Link to="/projects">Projects</Link>
+          <Link to="/projects">קישורים</Link>
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>

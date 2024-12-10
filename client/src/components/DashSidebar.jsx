@@ -102,7 +102,7 @@ const DashSidebar = () => {
             icon={HiArrowSmRight}
             className="cursor-pointer"
             onClick={handleSignOut}>
-            Sign Out
+            יציאה
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>

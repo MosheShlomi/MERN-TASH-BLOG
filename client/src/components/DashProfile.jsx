@@ -70,7 +70,7 @@ const DashProfile = () => {
       },
       (error) => {
         setimageFileUploadError(
-          "Could not upload image (File must be less than 2MB)."
+          "לא ניתן להעלות תמונה (הקובץ חייב להיות קטן מ-2MB)."
         );
         setimageFileUploadProgress(null);
         setImageFile(null);
@@ -96,12 +96,12 @@ const DashProfile = () => {
     setUpdateUserSuccess(null);
     setUpdateUserError(null);
     if (Object.keys(formData).length === 0) {
-      setUpdateUserError("No changes made!");
+      setUpdateUserError("לא בוצעו שינויים!");
       return;
     }
 
     if (imageFileUploading) {
-      setUpdateUserError("Please wait for image to upload!");
+      setUpdateUserError("אנא המתן להעלאת התמונה!");
       return;
     }
     try {
@@ -119,7 +119,7 @@ const DashProfile = () => {
         setUpdateUserError(data.message);
       } else {
         dispatch(updateSuccess(data));
-        setUpdateUserSuccess("User's profile updated successfully!");
+        setUpdateUserSuccess("פרופיל המשתמש עודכן בהצלחה!");
       }
     } catch (error) {
       dispatch(updateFailure(error.message));
@@ -162,7 +162,7 @@ const DashProfile = () => {
 
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
-      <h1 className="my-7 text-center font-semibold text-3xl">Profile</h1>
+      <h1 className="my-7 text-center font-semibold text-3xl">פרופיל</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <input
           type="file"
@@ -218,6 +218,7 @@ const DashProfile = () => {
           id="username"
           defaultValue={currentUser.username}
           onChange={handleChange}
+          dir="ltr"
         />
         <TextInput
           type="email"
@@ -225,19 +226,21 @@ const DashProfile = () => {
           id="email"
           defaultValue={currentUser.email}
           onChange={handleChange}
+          dir="ltr"
         />
         <TextInput
           type="password"
           placeholder="Password"
           id="password"
           onChange={handleChange}
+          dir="ltr"
         />
         <Button
           gradientDuoTone="purpleToBlue"
           type="submit"
           outline
           disabled={loading || imageFileUploading}>
-          {loading ? "Loading..." : "Update"}
+          {loading ? "טוען..." : "עדכן"}
         </Button>
         {currentUser.isAdmin && (
           <Link to="/create-post">
@@ -245,7 +248,7 @@ const DashProfile = () => {
               gradientDuoTone="purpleToPink"
               type="button"
               className="w-full">
-              Create a post
+              צור פוסט
             </Button>
           </Link>
         )}
@@ -253,10 +256,10 @@ const DashProfile = () => {
 
       <div className="text-red-500 flex justify-between mt-5">
         <span className="cursor-pointer" onClick={() => setShowModal(true)}>
-          Delete Account
+          מחק חשבון
         </span>
         <span className="cursor-pointer" onClick={handleSignOut}>
-          Sign Out
+          יציאה
         </span>
       </div>
       {updateUserSuccess && (
@@ -284,14 +287,14 @@ const DashProfile = () => {
           <div className="text-center">
             <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
             <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
-              Are you sure you want to delete your account?
+              האם אתה בטוח שברצונך למחוק את חשבונך?
             </h3>
             <div className="flex justify-center gap-4">
               <Button color="failure" onClick={handleDeleteUser}>
-                Yes, I am
+                כן, בהחלט
               </Button>
               <Button color="gray" onClick={() => setShowModal(false)}>
-                No, cancel
+                לא, בטל
               </Button>
             </div>
           </div>

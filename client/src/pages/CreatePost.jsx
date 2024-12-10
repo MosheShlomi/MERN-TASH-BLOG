@@ -46,7 +46,7 @@ const CreatePost = () => {
   const handleUploadImage = async () => {
     try {
       if (!file) {
-        setImageUploadError("Please select an image!");
+        setImageUploadError("אנא בחר תמונה!");
         return;
       }
       setImageUploadError(null);
@@ -63,7 +63,7 @@ const CreatePost = () => {
           setImageUploadProgress(progress.toFixed(0));
         },
         (error) => {
-          setImageUploadError("Image upload failed.");
+          setImageUploadError("העלאת תמונה נכשלה");
           setImageUploadProgress(null);
         },
         () => {
@@ -75,7 +75,7 @@ const CreatePost = () => {
         }
       );
     } catch (error) {
-      setImageUploadError("Image upload failed.");
+      setImageUploadError("העלאת תמונה נכשלה");
       setImageUploadProgress(null);
       console.log(error);
     }
@@ -100,18 +100,18 @@ const CreatePost = () => {
         navigate(`/post/${data.slug}`);
       }
     } catch (error) {
-      setPublishError("Something went wrong.");
+      setPublishError("משהו נכשל בדרך.");
     }
   };
 
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
-      <h1 className="text-center text-3xl my-7 font-semibold">Create a post</h1>
+      <h1 className="text-center text-3xl my-7 font-semibold">צור פוסט</h1>
       <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"
-            placeholder="Title"
+            placeholder="כותרת"
             id="title"
             required
             className="flex-1"
@@ -123,7 +123,7 @@ const CreatePost = () => {
             onChange={(e) =>
               setFormData({ ...formData, category: e.target.value })
             }>
-            <option value="uncategorized">Select a category</option>
+            <option value="uncategorized">בחר קטגוריה</option>
             <option value="תשמש">תשמש</option>
             <option value="מיוחדת">מיוחדת</option>
             <option value="חוגר">חוגר</option>
@@ -150,7 +150,7 @@ const CreatePost = () => {
                 />
               </div>
             ) : (
-              "Upload image"
+              "העלה תמונה"
             )}
           </Button>
         </div>
@@ -189,7 +189,7 @@ const CreatePost = () => {
         />
 
         <Button type="submit" gradientDuoTone="purpleToPink">
-          Publish
+          פרסם
         </Button>
         {publishError && (
           <Alert color="failure" className="mt-5">

@@ -57,20 +57,20 @@ const SignIn = () => {
         <div className="flex-1">
           <Link to="/" className="font-bold dark:text-white text-4xl">
             <span className="px-2 py-1 bg-gradient-to-r from-red-500 via-green-500 to-blue-500  rounded-lg text-white">
-              Tash
+              ת"ש
             </span>{" "}
-            Blog
+            בלוג
           </Link>
           <p className="text-sm mt-5">
-            This is a demo project. You can sign in with your email and password
-            or with Google.
+            התחברו עכשיו כדי ליהנות מגישה מלאה לכל הפוסטים ולהגיב, לשתף תוכן
+            ולהצטרף לקהילה שלנו!
           </p>
         </div>
         {/* right */}
         <div className="flex-1">
           <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
             <div>
-              <Label value="Your email" />
+              <Label value="אימייל" />
               <TextInput
                 type="email"
                 placeholder="name@company.com"
@@ -79,7 +79,7 @@ const SignIn = () => {
               />
             </div>
             <div>
-              <Label value="Your password" />
+              <Label value="סיסמא" />
               <TextInput
                 type="password"
                 placeholder="**********"
@@ -95,18 +95,18 @@ const SignIn = () => {
               {loading ? (
                 <>
                   <Spinner size="sm" />
-                  <span className="pl-3">Loading...</span>
+                  <span className="pl-3">טוען...</span>
                 </>
               ) : (
-                "Sign In"
+                "התחברות"
               )}
             </Button>
             <OAuth />
           </form>
           <div className="flex gap-2 text-sm mt-5">
-            <span>Don't have an account?</span>
+            <span>אין לך עדיין חשבון?</span>
             <Link to="/sign-up" className="text-blue-500">
-              Sign Up
+              הרשמה
             </Link>
           </div>
           {errorMessage && (

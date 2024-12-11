@@ -230,7 +230,7 @@ const DashProfile = () => {
         />
         <TextInput
           type="password"
-          placeholder="סיסמא חדש(אם צריך)"
+          placeholder="סיסמא חדשה(אם צריך)"
           autoComplete="on"
           id="password"
           onChange={handleChange}

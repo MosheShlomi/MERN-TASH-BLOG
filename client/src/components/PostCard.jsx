@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaHeart } from "react-icons/fa";
 
 function PostCard({ post }) {
   return (
@@ -14,12 +15,19 @@ function PostCard({ post }) {
       <div className="p-3 flex flex-col gap-2">
         <p className="text-lg font-semibold line-clamp-2">{post.title}</p>
         <span className="italic text-sm">{post.category}</span>
-        <span className="italic text-sm text-left">
+        <span className="text-sm flex justify-between flex-row-reverse">
           {new Date(post.updatedAt).toLocaleDateString("he-IL", {
             day: "2-digit",
             month: "2-digit",
             year: "numeric",
           })}
+
+          {post.numberOfLikes && (
+            <span className="flex gap-1 text-md justify-center items-center ">
+              <FaHeart className="text-red-500"/>
+              {post.numberOfLikes}
+            </span>
+          )}
         </span>
         <Link
           to={`/post/${post.slug}`}

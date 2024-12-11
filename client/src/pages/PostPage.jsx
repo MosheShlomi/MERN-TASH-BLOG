@@ -1,9 +1,12 @@
-import { Button, Spinner } from "flowbite-react";
+import { Button, Modal, Spinner } from "flowbite-react";
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import CallToAction from "../components/CallToAction";
 import CommentSection from "../components/CommentSection";
 import PostCard from "../components/PostCard";
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+import { FaHeart } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 function PostPage() {
   const { postSlug } = useParams();
@@ -11,6 +14,10 @@ function PostPage() {
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
   const [recentPosts, setRecentPosts] = useState(null);
+  const { currentUser } = useSelector((state) => state.user);
+  const [showModal, setShowModal] = useState(false);
+  const [postIdToDelete, setPostIdToDelete] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPost = async () => {
@@ -51,6 +58,42 @@ function PostPage() {
     fetchRecentPosts();
   }, []);
 
+  const handleDeletePost = async () => {
+    setShowModal(false);
+    try {
+      const res = await fetch(
+        `/api/post/delete-post/${postIdToDelete}/${currentUser._id}`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        navigate("/");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handleLikePost = async () => {
+    try {
+      if (!currentUser) {
+        navigate("/sign-in");
+        return;
+      }
+      const res = await fetch(`/api/post/like-post/${post._id}`, {
+        method: "PUT",
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setPost(data);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -59,7 +102,24 @@ function PostPage() {
     );
   }
   return (
-    <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen">
+    <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen items-center">
+      {currentUser && currentUser.isAdmin && (
+        <div className="flex justify-between max-w-2xl w-full border-b border-slate-600 px-2 -mb-9">
+          <Link to={`/update-post/${post._id}`}>
+            <span className="text-teal-500 hover:underline cursor-pointer">
+              עריכה
+            </span>
+          </Link>
+          <span
+            onClick={() => {
+              setShowModal(true);
+              setPostIdToDelete(post._id);
+            }}
+            className="font-medium text-red-500 hover:underline cursor-pointer">
+            מחיקה
+          </span>
+        </div>
+      )}
       <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">
         {post && post.title}
       </h1>
@@ -76,6 +136,7 @@ function PostPage() {
         alt={post && post.title}
         className="mt-5 p-3 max-h-[600px] w-full max-w-2xl mx-auto object-cover"
       />
+
       <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">
         <span>
           {post &&
@@ -88,6 +149,25 @@ function PostPage() {
         <span className="italic">
           {post && (post.content.length / 1000).toFixed(0)} דקות קריאה
         </span>
+      </div>
+      <div className="flex gap-2 w-full max-w-2xl text-md p-3 text-right">
+        <button
+          type="button"
+          onClick={handleLikePost}
+          className={
+            currentUser && post.likes.includes(currentUser._id)
+              ? "text-md text-red-500 hover:text-gray-400"
+              : "text-md text-gray-400 hover:text-red-500"
+          }>
+          <FaHeart />
+        </button>
+        <p className="text-gray-400">
+          {post.numberOfLikes > 0 &&
+            post.numberOfLikes +
+              " " +
+              (post.numberOfLikes === 1 ? "אהב/ה " : "אהבו ") +
+              "את הפוסט"}
+        </p>
       </div>
 
       <div
@@ -104,6 +184,29 @@ function PostPage() {
             recentPosts.map((post) => <PostCard key={post._id} post={post} />)}
         </div>
       </div>
+      <Modal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        popup
+        size="md">
+        <Modal.Header />
+        <Modal.Body>
+          <div className="text-center">
+            <HiOutlineExclamationCircle className="h-14 w-14 text-gray-400 dark:text-gray-200 mb-4 mx-auto" />
+            <h3 className="mb-5 text-lg text-gray-500 dark:text-gray-400">
+              האם אתה בטוח שברצונך למחוק את הפוסט הזה?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="failure" onClick={handleDeletePost}>
+                כן, בהחלט
+              </Button>
+              <Button color="gray" onClick={() => setShowModal(false)}>
+                לא, בטל
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </main>
   );
 }

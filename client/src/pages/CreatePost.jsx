@@ -165,7 +165,7 @@ const CreatePost = () => {
 
         <ReactQuill
           theme="snow"
-          placeholder="Write something"
+          placeholder="רשום משהו..."
           className="h-72 mb-12"
           required
           formats={[
@@ -199,7 +199,9 @@ const CreatePost = () => {
       </form>
 
       <div>
-        <h2 className="text-xl font-bold flex justify-center mt-8">Preview</h2>
+        <h2 className="text-xl font-bold flex justify-center mt-8">
+          תצוגה מקדימה
+        </h2>
         <div
           className="max-w-3xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: formData.content }}></div>

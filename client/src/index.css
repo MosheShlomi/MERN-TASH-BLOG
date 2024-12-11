@@ -8,14 +8,13 @@ body {
 
 .ql-editor {
   font-size: 1.05rem;
-  /* direction: rtl;
-  text-align: right; */
+  direction: rtl;
+  text-align: right;
 }
 
-/* .post-content { */
-  /* direction: rtl; */
-  /* text-align: right; */
-/* } */
+.ql-snow .ql-picker {
+  direction: ltr;
+}
 
 .post-content p {
   margin-bottom: 0.5rem;
@@ -45,4 +44,8 @@ body {
 
 .dark .post-content a {
   color: red;
+}
+
+:root.bg-white {
+  background-color: green !important;
 }

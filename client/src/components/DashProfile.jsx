@@ -222,7 +222,7 @@ const DashProfile = () => {
         />
         <TextInput
           type="email"
-          placeholder="Email"
+          placeholder="אימייל"
           id="email"
           defaultValue={currentUser.email}
           onChange={handleChange}
@@ -230,7 +230,8 @@ const DashProfile = () => {
         />
         <TextInput
           type="password"
-          placeholder="Password"
+          placeholder="סיסמא חדש(אם צריך)"
+          autoComplete="on"
           id="password"
           onChange={handleChange}
           dir="ltr"

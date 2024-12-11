@@ -22,7 +22,6 @@ export const create = async (req, res, next) => {
     }
 };
 
-
 export const getPosts = async (req, res, next) => {
     try {
         const startIndex = parseInt(req.query.startIndex) || 0;
@@ -92,6 +91,30 @@ export const updatePost = async (req, res, next) => {
         }, { new: true }
         );
         res.status(200).json(updatedPost);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export const likePost = async (req, res, next) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+        if (!post) {
+            return next(errorHandler(404, "Post not found"));
+        }
+
+        const userIndex = post.likes.indexOf(req.user.id);
+
+        if (userIndex === -1) {
+            post.likes.push(req.user.id);
+            post.numberOfLikes += 1;
+        } else {
+            post.likes.splice(userIndex, 1);
+            post.numberOfLikes -= 1;
+        }
+        await post.save();
+
+        res.status(200).json(post);
     } catch (error) {
         next(error);
     }

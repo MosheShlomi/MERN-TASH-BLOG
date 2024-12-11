@@ -31,7 +31,6 @@ const UpdatePost = () => {
         const res = await fetch(`/api/post/get-posts?postId=${postId}`);
         const data = await res.json();
         if (!res.ok) {
-          console.log(data.message);
           setPublishError(data.message);
           return;
         } else {
@@ -130,8 +129,6 @@ const UpdatePost = () => {
     }
   };
 
-  console.log(formData);
-
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">עדכן פוסט</h1>
@@ -195,7 +192,7 @@ const UpdatePost = () => {
 
         <ReactQuill
           theme="snow"
-          placeholder="Write something"
+          placeholder="רשום משהו..."
           className="h-72 mb-12"
           required
           formats={[
@@ -230,7 +227,7 @@ const UpdatePost = () => {
       </form>
 
       <div>
-        <h2 className="text-xl font-bold flex justify-center mt-8">Preview</h2>
+        <h2 className="text-xl font-bold flex justify-center mt-8">תצוגה מקדימה</h2>
         <div
           className="max-w-3xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: formData.content }}></div>

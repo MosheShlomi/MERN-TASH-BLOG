@@ -111,6 +111,14 @@ const Header = () => {
               <Dropdown.Item>פרופיל</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
+            <span className="inline sm:hidden">
+              <Dropdown.Item
+                onClick={() => dispatch(toogleTheme())}
+                className=" text-right">
+                {theme === "light" ? "מצב לילה" : "מצב יום"}
+              </Dropdown.Item>
+              <Dropdown.Divider />
+            </span>
             <Dropdown.Item onClick={handleSignOut}>יציאה</Dropdown.Item>
           </Dropdown>
         ) : (

@@ -17,6 +17,7 @@ function PostPage() {
   const { currentUser } = useSelector((state) => state.user);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
+  const [postUser, setPostUser] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,8 +40,29 @@ function PostPage() {
         setLoading(false);
       }
     };
+
     fetchPost();
   }, [postSlug]);
+
+  useEffect(() => {
+    if (!post?.userId) return;
+
+    const getUser = async () => {
+      try {
+        console.log(post.userId);
+
+        const res = await fetch(`/api/user/${post.userId}`);
+        const data = await res.json();
+        if (res.ok) {
+          setPostUser(data);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    getUser();
+  }, [post?.userId]);
 
   useEffect(() => {
     const fetchRecentPosts = async () => {
@@ -105,7 +127,7 @@ function PostPage() {
     <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen items-center">
       {currentUser && currentUser.isAdmin && (
         <div className="flex justify-between max-w-2xl w-full border-b border-slate-600 px-2 -mb-9">
-          <Link to={`/update-post/${post._id}`}>
+          <Link to={`/update-post/${post._id}/${post.userId}`}>
             <span className="text-teal-500 hover:underline cursor-pointer">
               עריכה
             </span>
@@ -127,7 +149,7 @@ function PostPage() {
         to={`/search?category=${post && post.category}`}
         className="self-center mt-2">
         <Button color="gray" pill size="xs">
-          {post && post.category}#
+          {post && post.category}
         </Button>
       </Link>
 
@@ -150,24 +172,32 @@ function PostPage() {
           {post && (post.content.length / 1000).toFixed(0)} דקות קריאה
         </span>
       </div>
-      <div className="flex gap-2 w-full max-w-2xl text-md p-3 text-right">
-        <button
-          type="button"
-          onClick={handleLikePost}
-          className={
-            currentUser && post.likes.includes(currentUser._id)
-              ? "text-md text-red-500 hover:text-gray-400"
-              : "text-md text-gray-400 hover:text-red-500"
-          }>
-          <FaHeart />
-        </button>
-        <p className="text-gray-400">
-          {post.numberOfLikes > 0 &&
-            post.numberOfLikes +
-              " " +
-              (post.numberOfLikes === 1 ? "אהב/ה " : "אהבו ") +
-              "את הפוסט"}
-        </p>
+      <div className="flex gap-2 w-full max-w-2xl text-md p-3 justify-between border-b border-slate-500">
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={handleLikePost}
+            className={
+              currentUser && post.likes.includes(currentUser._id)
+                ? "text-md text-red-500 hover:text-gray-400"
+                : "text-md text-gray-400 hover:text-red-500"
+            }>
+            <FaHeart />
+          </button>
+          <p className="text-gray-400">
+            {post.numberOfLikes > 0 &&
+              post.numberOfLikes +
+                " " +
+                (post.numberOfLikes === 1 ? "אהב/ה " : "אהבו ") +
+                "את הפוסט"}
+          </p>
+        </div>
+        <span className="text-xs">
+          נכתב ע"י{" "}
+          <span className="font-bold  truncate text-cyan-600 hover:underline hover:cursor-pointer">
+            {postUser ? `${postUser.username}@` : "משתמש אנונימי"}
+          </span>
+        </span>
       </div>
 
       <div

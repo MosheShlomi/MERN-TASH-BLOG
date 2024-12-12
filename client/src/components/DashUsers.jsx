@@ -67,14 +67,14 @@ function DashUsers() {
     <div className="table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.isAdmin && users.length > 0 ? (
         <>
-          <Table hoverable className="shadow-md">
+          <Table hoverable className="shadow-md text-right">
             <Table.Head>
-              <Table.HeadCell>Date Created</Table.HeadCell>
-              <Table.HeadCell>User Image</Table.HeadCell>
+              <Table.HeadCell>תאריך הרשמה</Table.HeadCell>
+              <Table.HeadCell>תמונת פרופיל</Table.HeadCell>
               <Table.HeadCell>Username</Table.HeadCell>
-              <Table.HeadCell>Email</Table.HeadCell>
+              <Table.HeadCell>אימייל</Table.HeadCell>
               <Table.HeadCell>Admin</Table.HeadCell>
-              <Table.HeadCell>Delete</Table.HeadCell>
+              <Table.HeadCell>מחיקה</Table.HeadCell>
             </Table.Head>
             {users.map((user, index) => (
               <Table.Body className="divide-y" key={`${user._id}-${index}`}>
@@ -113,7 +113,7 @@ function DashUsers() {
                         setUserIdToDelete(user._id);
                       }}
                       className="font-medium text-red-500 hover:underline cursor-pointer">
-                      Delete
+                      מחיקה
                     </span>
                   </Table.Cell>
                 </Table.Row>

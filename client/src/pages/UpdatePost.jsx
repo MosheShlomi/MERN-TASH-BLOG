@@ -23,12 +23,15 @@ const UpdatePost = () => {
   const [publishError, setPublishError] = useState(null);
 
   const navigate = useNavigate();
-  const { postId } = useParams();
+  const { postId, postUserId } = useParams();
 
   useEffect(() => {
+    if (!currentUser.isAdmin && postUserId !== currentUser._id) {
+      navigate("/");
+    }
     try {
       const fetchPost = async () => {
-        const res = await fetch(`/api/post/get-posts?postId=${postId}`);
+        const res = await fetch(`/api/post/get-posts?postId=${postId}&status=all`);
         const data = await res.json();
         if (!res.ok) {
           setPublishError(data.message);
@@ -36,9 +39,11 @@ const UpdatePost = () => {
         } else {
           setPublishError(null);
           setFormData(data.posts[0]);
+          console.log(formData);
+          
         }
       };
-      fetchPost();
+      if (currentUser) fetchPost();
     } catch (error) {
       console.log(error.message);
     }
@@ -227,7 +232,9 @@ const UpdatePost = () => {
       </form>
 
       <div>
-        <h2 className="text-xl font-bold flex justify-center mt-8">תצוגה מקדימה</h2>
+        <h2 className="text-xl font-bold flex justify-center mt-8">
+          תצוגה מקדימה
+        </h2>
         <div
           className="max-w-3xl mx-auto w-full post-content"
           dangerouslySetInnerHTML={{ __html: formData.content }}></div>

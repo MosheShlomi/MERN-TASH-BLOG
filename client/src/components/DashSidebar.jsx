@@ -9,6 +9,7 @@ import {
   HiAnnotation,
   HiChartPie,
 } from "react-icons/hi";
+import { MdOutlinePostAdd } from "react-icons/md";
 import { signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -63,9 +64,20 @@ const DashSidebar = () => {
               label={currentUser.isAdmin ? "Admin" : "User"}
               labelColor="dark"
               as="div">
-              Profile
+              פרופיל
             </Sidebar.Item>
           </Link>
+          {!currentUser.isAdmin && (
+            <Link to="/dashboard?tab=drafts">
+              <Sidebar.Item
+                active={tab === "drafts"}
+                icon={HiDocumentText}
+                className="cursor-pointer"
+                as="div">
+                פוסטים שלי
+              </Sidebar.Item>
+            </Link>
+          )}
           {currentUser.isAdmin && (
             <>
               <Link to="/dashboard?tab=posts">
@@ -74,7 +86,16 @@ const DashSidebar = () => {
                   icon={HiDocumentText}
                   className="cursor-pointer"
                   as="div">
-                  Posts
+                  פוסטים
+                </Sidebar.Item>
+              </Link>
+              <Link to="/dashboard?tab=drafts">
+                <Sidebar.Item
+                  active={tab === "drafts"}
+                  icon={MdOutlinePostAdd}
+                  className="cursor-pointer"
+                  as="div">
+                  פוסטים לאישור
                 </Sidebar.Item>
               </Link>
               <Link to="/dashboard?tab=users">
@@ -83,7 +104,7 @@ const DashSidebar = () => {
                   icon={HiOutlineUserGroup}
                   className="cursor-pointer"
                   as="div">
-                  Users
+                  משתמשים
                 </Sidebar.Item>
               </Link>
               <Link to="/dashboard?tab=comments">
@@ -92,7 +113,7 @@ const DashSidebar = () => {
                   icon={HiAnnotation}
                   className="cursor-pointer"
                   as="div">
-                  Comments
+                  תגובות
                 </Sidebar.Item>
               </Link>
             </>

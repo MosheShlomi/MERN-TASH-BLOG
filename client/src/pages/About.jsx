@@ -10,30 +10,21 @@ const About = () => {
           </h1>
           <div className="text-md text-gray-500 flex flex-col gap-6">
             <p>
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Modi
-              harum, numquam sed in atque possimus corporis rerum dolore,
-              suscipit accusantium iste eaque fugiat amet ab quos non
-              repellendus facilis. Ex atque eveniet ducimus sed natus enim sint
-              labore assumenda. Doloremque autem ea sequi suscipit earum
-              nostrum, velit minima minus possimus cum? Hic laboriosam iste
-              laborum dignissimos ex exercitationem quae ad vitae quibusdam odit
-              excepturi id eius nulla sint repudiandae pariatur quam voluptatum,
-              esse quo aliquid quos provident tempora eos dolorum. Mollitia,
-              saepe doloremque deleniti corrupti fuga quae soluta? Deleniti
-              architecto omnis laboriosam magnam. Voluptatem, consequuntur.
-              Dolores possimus eaque similique adipisci quaerat libero deserunt
-              alias repellat error pariatur dolorum rem aliquam maxime, vel
-              placeat obcaecati sint sit ipsam, enim cupiditate minima et?
-              Repellat odio nobis, harum, qui dicta eos ipsa, impedit laudantium
-              reiciendis pariatur earum accusantium officia omnis et cupiditate
-              asperiores accusamus natus maiores id aspernatur doloribus iste
-              dolores sed velit? Est dignissimos laborum accusamus commodi
-              exercitationem maxime iure. Illum corrupti ullam quis temporibus
-              sapiente omnis tempore perspiciatis recusandae consequatur
-              veritatis cupiditate alias voluptatum quasi, ipsa itaque
-              doloremque rem ab unde ex? Corporis architecto magnam est
-              explicabo culpa assumenda voluptas sunt animi distinctio soluta
-              illo, odio aliquam dolore provident ratione quia?
+              הבלוג הזה נועד לתת מידע ועדכונים חשובים לכל חייל וחיילת בצה"ל
+              שקשור לת״ש. כאן תוכלו למצוא מדריכים, טיפים, ומידע עדכני שיעזור לכם
+              להבין את הזכויות שלכם, לדעת מהן ההטבות שמגיעות לכם, ולהתמודד עם
+              אתגרים שיכולים להיות. <br /> המטרה שלנו היא לא רק להעניק לכם את
+              המידע הנחוץ ביותר, אלא גם לעזור לכם למצוא תשובות לשאלות שיכולות
+              לעלות לכם ולהרגיש שאתם לא לבד. הבלוג הזה מכסה מגוון רחב של נושאים,
+              כולל:
+              <ul>
+                <li>זכויות חיילים ותנאים קבלת ת״ש</li>
+                <li>עדכונים על חוקים ותקנות חדשים</li>
+                <li>מידה חדש ואינפורמציה מעניינת </li>
+              </ul>
+              השירות הצבאי הוא תקופה משמעותית בחיים של כל אחד, ומטרתנו היא להקל
+              עליכם ולהשפיע באופן חיובי על החוויה הזו. נשמח אם תהנו מהבלוג שלנו
+              ותקבלו אינפורמציה שתעזור לכם ותשפר את השירות שלכם
             </p>
           </div>
         </div>

@@ -243,16 +243,14 @@ const DashProfile = () => {
           disabled={loading || imageFileUploading}>
           {loading ? "טוען..." : "עדכן"}
         </Button>
-        {currentUser.isAdmin && (
-          <Link to="/create-post">
-            <Button
-              gradientDuoTone="purpleToPink"
-              type="button"
-              className="w-full">
-              צור פוסט
-            </Button>
-          </Link>
-        )}
+        <Link to="/create-post">
+          <Button
+            gradientDuoTone="purpleToPink"
+            type="button"
+            className="w-full">
+            צור פוסט
+          </Button>
+        </Link>
       </form>
 
       <div className="text-red-500 flex justify-between mt-5">

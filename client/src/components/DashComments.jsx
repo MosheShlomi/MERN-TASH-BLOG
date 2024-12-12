@@ -74,14 +74,14 @@ function DashComments() {
     <div className="table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
       {currentUser.isAdmin && comments.length > 0 ? (
         <>
-          <Table hoverable className="shadow-md">
+          <Table hoverable className="shadow-md text-right">
             <Table.Head>
-              <Table.HeadCell>Date Updated</Table.HeadCell>
-              <Table.HeadCell>Comment content</Table.HeadCell>
-              <Table.HeadCell>Number of likes</Table.HeadCell>
+              <Table.HeadCell>תאריך עדכון</Table.HeadCell>
+              <Table.HeadCell>תוכן התגובה</Table.HeadCell>
+              <Table.HeadCell>כמות לייקים</Table.HeadCell>
               <Table.HeadCell>PostId</Table.HeadCell>
               <Table.HeadCell>UserId</Table.HeadCell>
-              <Table.HeadCell>Delete</Table.HeadCell>
+              <Table.HeadCell>מחיקה</Table.HeadCell>
             </Table.Head>
             {comments.map((comment, index) => (
               <Table.Body className="divide-y" key={`${comment._id}-${index}`}>
@@ -104,7 +104,7 @@ function DashComments() {
                         setCommentIdToDelete(comment._id);
                       }}
                       className="font-medium text-red-500 hover:underline cursor-pointer">
-                      Delete
+                      מחיקה
                     </span>
                   </Table.Cell>
                 </Table.Row>

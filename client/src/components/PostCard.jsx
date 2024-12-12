@@ -22,12 +22,12 @@ function PostCard({ post }) {
             year: "numeric",
           })}
 
-          {post.numberOfLikes && (
+          {post.numberOfLikes ? (
             <span className="flex gap-1 text-md justify-center items-center ">
-              <FaHeart className="text-red-500"/>
+              <FaHeart className="text-red-500" />
               {post.numberOfLikes}
             </span>
-          )}
+          ) : null}
         </span>
         <Link
           to={`/post/${post.slug}`}

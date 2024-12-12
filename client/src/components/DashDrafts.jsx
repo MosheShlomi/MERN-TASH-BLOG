@@ -4,22 +4,30 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
 
-function DashPosts() {
+function DashDrafts() {
   const { currentUser } = useSelector((state) => state.user);
-  const [userPosts, setUserPosts] = useState([]);
+  const [draftPosts, setDraftPosts] = useState([]);
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
-  const [postIdToDelete, setPostIdToDelete] = useState("");
+  const [postToDelete, setPostToDelete] = useState(null);
+
+  const hebrewNames = {
+    pending: "ממתין לאישור",
+    published: "פורסם",
+    rejected: "נדחה",
+  };
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const res = await fetch(
-          `/api/post/get-posts?userId=${currentUser._id}`
+          `/api/post/get-draft-posts?userId=${currentUser._id}`
         );
         const data = await res.json();
         if (res.ok) {
-          setUserPosts(data.posts);
+          setDraftPosts(data.posts);
+          console.log(data.posts);
+
           if (data.posts.length < 9) {
             setShowMore(false);
           }
@@ -28,20 +36,20 @@ function DashPosts() {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
+    if (currentUser) {
       fetchPosts();
     }
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
-    const startIndex = userPosts.length;
+    const startIndex = draftPosts.length;
     try {
       const res = await fetch(
-        `/api/post/get-posts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `/api/post/get-draft-posts?userId=${currentUser._id}&startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
-        setUserPosts((prev) => [...prev, ...data.posts]);
+        setDraftPosts((prev) => [...prev, ...data.posts]);
         if (data.posts.length < 9) {
           setShowMore(false);
         }
@@ -50,19 +58,39 @@ function DashPosts() {
       console.log(error.message);
     }
   };
+
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
       const res = await fetch(
-        `/api/post/delete-post/${postIdToDelete}/${currentUser._id}`,
+        `/api/post/delete-post/${postToDelete._id}/${postToDelete.userId}`,
         { method: "DELETE" }
       );
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
       } else {
-        setUserPosts((prev) =>
-          prev.filter((post) => post._id !== postIdToDelete)
+        setDraftPosts((prev) =>
+          prev.filter((post) => post._id !== postToDelete._id)
+        );
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const handlePublishPost = async (post) => {
+    try {
+      const res = await fetch(
+        `/api/post/delete-post/${postToDelete._id}/${postToDelete.userId}`,
+        { method: "DELETE" }
+      );
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setDraftPosts((prev) =>
+          prev.filter((post) => post._id !== postToDelete._id)
         );
       }
     } catch (error) {
@@ -71,8 +99,8 @@ function DashPosts() {
   };
 
   return (
-    <div className="table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+    <div className=" table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      {draftPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md text-right">
             <Table.Head>
@@ -80,12 +108,17 @@ function DashPosts() {
               <Table.HeadCell>תמונה ראשית</Table.HeadCell>
               <Table.HeadCell>כותרת</Table.HeadCell>
               <Table.HeadCell>קטגוריה</Table.HeadCell>
-              <Table.HeadCell>מחיקה</Table.HeadCell>
+              <Table.HeadCell>
+                <span>סטטוס</span>
+              </Table.HeadCell>
               <Table.HeadCell>
                 <span>עריכה</span>
               </Table.HeadCell>
+              {currentUser.isAdmin && <Table.HeadCell>פרסם</Table.HeadCell>}
+
+              <Table.HeadCell>מחיקה</Table.HeadCell>
             </Table.Head>
-            {userPosts.map((post, index) => (
+            {draftPosts.map((post, index) => (
               <Table.Body className="divide-y" key={`${post._id}-${index}`}>
                 <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
                   <Table.Cell>
@@ -112,22 +145,40 @@ function DashPosts() {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>{post.category}</Table.Cell>
+                  <Table.Cell>{hebrewNames[post.status]}</Table.Cell>
+
+                  <Table.Cell>
+                    <Link to={`/update-post/${post._id}/${post.userId}`}>
+                      {!currentUser.isAdmin && post.status === "published" ? (
+                        "לא ניתן לערוך"
+                      ) : (
+                        <span className="text-teal-500 hover:underline cursor-pointer">
+                          עריכה
+                        </span>
+                      )}
+                    </Link>
+                  </Table.Cell>
+                  {currentUser.isAdmin && (
+                    <Table.Cell>
+                      <span
+                        onClick={() => {
+                          handlePublishPost(post);
+                        }}
+                        className="font-medium text-red-500 hover:underline cursor-pointer">
+                        פרסם
+                      </span>
+                    </Table.Cell>
+                  )}
+
                   <Table.Cell>
                     <span
                       onClick={() => {
                         setShowModal(true);
-                        setPostIdToDelete(post._id);
+                        setPostToDelete(post);
                       }}
                       className="font-medium text-red-500 hover:underline cursor-pointer">
                       מחיקה
                     </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/update-post/${post._id}/${post.userId}`}>
-                      <span className="text-teal-500 hover:underline cursor-pointer">
-                        עריכה
-                      </span>
-                    </Link>
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>
@@ -171,4 +222,4 @@ function DashPosts() {
   );
 }
 
-export default DashPosts;
+export default DashDrafts;

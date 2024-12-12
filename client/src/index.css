@@ -49,3 +49,25 @@ body {
 :root.bg-white {
   background-color: green !important;
 }
+
+/* For rtl Flowbite table direction */
+.group\/head:first-child .group-first\/head\:last\:rounded-tr-lg:last-child {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0% !important;
+}
+.group\/head:first-child .group-first\/head\:first\:rounded-tl-lg:first-child {
+  border-top-right-radius: 0.5rem;
+  border-top-left-radius: 0% !important;
+}
+.group\/body:last-child
+  .group\/row:last-child
+  .group-last\/body\:group-last\/row\:last\:rounded-br-lg:last-child {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-right-radius: 0% !important;
+}
+.group\/body:last-child
+  .group\/row:last-child
+  .group-last\/body\:group-last\/row\:first\:rounded-bl-lg:first-child {
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0% !important;
+}

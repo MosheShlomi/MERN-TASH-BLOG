@@ -74,7 +74,7 @@ function DashboardComponent() {
         <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md">
           <div className="flex justify-between ">
             <div className="">
-              <h3 className="text-gray-500 text-md uppercase">Total Users</h3>
+              <h3 className="text-gray-500 text-md uppercase">סך משתמשים</h3>
               <p className="text-2xl">{totalUsers}</p>
             </div>
             <HiOutlineUserGroup className="bg-teal-600 text-white rounded-full text-5xl p-3 shadow-lg" />
@@ -84,16 +84,14 @@ function DashboardComponent() {
               <HiArrowNarrowUp />
               {lastMonthUsers}
             </span>
-            <div className="text-gray-500 ">Last month</div>
+            <div className="text-gray-500 ">בחודש האחרון</div>
           </div>
         </div>
 
         <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md">
           <div className="flex justify-between ">
             <div className="">
-              <h3 className="text-gray-500 text-md uppercase">
-                Total Comments
-              </h3>
+              <h3 className="text-gray-500 text-md uppercase">סך תגובות</h3>
               <p className="text-2xl">{totalComments}</p>
             </div>
             <HiAnnotation className="bg-indigo-600 text-white rounded-full text-5xl p-3 shadow-lg" />
@@ -103,14 +101,14 @@ function DashboardComponent() {
               <HiArrowNarrowUp />
               {lastMonthComments}
             </span>
-            <div className="text-gray-500 ">Last month</div>
+            <div className="text-gray-500 ">בחודש האחרון</div>
           </div>
         </div>
 
         <div className="flex flex-col p-3 dark:bg-slate-800 gap-4 md:w-72 w-full rounded-md shadow-md">
           <div className="flex justify-between ">
             <div className="">
-              <h3 className="text-gray-500 text-md uppercase">Total Posts</h3>
+              <h3 className="text-gray-500 text-md uppercase">סך פוסטים</h3>
               <p className="text-2xl">{totalPosts}</p>
             </div>
             <HiDocumentText className="bg-lime-600 text-white rounded-full text-5xl p-3 shadow-lg" />
@@ -120,7 +118,7 @@ function DashboardComponent() {
               <HiArrowNarrowUp />
               {lastMonthPosts}
             </span>
-            <div className="text-gray-500 ">Last month</div>
+            <div className="text-gray-500 ">בחודש האחרון</div>
           </div>
         </div>
       </div>
@@ -128,14 +126,14 @@ function DashboardComponent() {
       <div className="flex flex-wrap gap-4 py-3 mx-auto justify-center">
         <div className="flex flex-col w-full md:w-auto flex-1 shadow-md p-2 rounded-md dark:bg-gray-800">
           <div className="flex justify-between p-3 text-sm font-semibold">
-            <h1 className="text-center p-2 ">Recent Users</h1>
+            <h1 className="text-center p-2 ">משתמשים אחרונים</h1>
             <Button outline gradientDuoTone="purpleToPink">
-              <Link to="/dashboard?tab=users">See all</Link>
+              <Link to="/dashboard?tab=users">לצפיה</Link>
             </Button>
           </div>
-          <Table hoverable className="shadow-md">
+          <Table hoverable className="shadow-md text-right">
             <Table.Head>
-              <Table.HeadCell>User image</Table.HeadCell>
+              <Table.HeadCell>תמונת פרופיל</Table.HeadCell>
               <Table.HeadCell>Username</Table.HeadCell>
             </Table.Head>
             {users &&
@@ -158,15 +156,15 @@ function DashboardComponent() {
 
         <div className="flex flex-col w-full md:w-auto flex-1 shadow-md p-2 rounded-md dark:bg-gray-800">
           <div className="flex justify-between p-3 text-sm font-semibold">
-            <h1 className="text-center p-2 ">Recent Comments</h1>
+            <h1 className="text-center p-2 ">תגובות אחרונות</h1>
             <Button outline gradientDuoTone="purpleToPink">
-              <Link to="/dashboard?tab=comments">See all</Link>
+              <Link to="/dashboard?tab=comments">לצפיה</Link>
             </Button>
           </div>
-          <Table hoverable className="shadow-md">
+          <Table hoverable className="shadow-md text-right">
             <Table.Head>
-              <Table.HeadCell>Comment content</Table.HeadCell>
-              <Table.HeadCell>Likes</Table.HeadCell>
+              <Table.HeadCell>תוכן התגובה</Table.HeadCell>
+              <Table.HeadCell>לייקים</Table.HeadCell>
             </Table.Head>
             {comments &&
               comments.map((comment) => (
@@ -186,14 +184,14 @@ function DashboardComponent() {
           <div className="flex justify-between p-3 text-sm font-semibold">
             <h1 className="text-center p-2 ">פוסטים אחרונים</h1>
             <Button outline gradientDuoTone="purpleToPink">
-              <Link to="/dashboard?tab=posts">See all</Link>
+              <Link to="/dashboard?tab=posts">לצפיה</Link>
             </Button>
           </div>
-          <Table hoverable className="shadow-md">
+          <Table hoverable className="shadow-md text-right">
             <Table.Head>
-              <Table.HeadCell>Post image</Table.HeadCell>
-              <Table.HeadCell>Post Title</Table.HeadCell>
-              <Table.HeadCell>Category</Table.HeadCell>
+              <Table.HeadCell>תמונה ראשית</Table.HeadCell>
+              <Table.HeadCell>כותרת</Table.HeadCell>
+              <Table.HeadCell>קטגוריה</Table.HeadCell>
             </Table.Head>
             {posts &&
               posts.map((post) => (

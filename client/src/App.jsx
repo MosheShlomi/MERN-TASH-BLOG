@@ -15,6 +15,7 @@ import UpdatePost from "./pages/UpdatePost";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
 import Search from "./pages/Search";
+import PostPreviewPage from "./pages/PostPreviewPage";
 
 const App = () => {
   return (
@@ -25,12 +26,13 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/create-post" element={<CreatePost />} />
+          <Route
+            path="/update-post/:postId"
+            element={<UpdatePost />}
+          />
+          <Route path="/post/preview/:postId" element={<PostPreviewPage />} />
         </Route>
-        <Route path="/create-post" element={<CreatePost />} />
-        <Route
-          path="/update-post/:postId/:postUserId"
-          element={<UpdatePost />}
-        />
         {/* <Route element={<OnlyAdminPrivateRoute />}></Route> */}
         <Route path="/about" element={<About />} />
         <Route path="/sign-up" element={<SignUp />} />

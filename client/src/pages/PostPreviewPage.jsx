@@ -8,8 +8,8 @@ import { HiOutlineExclamationCircle } from "react-icons/hi";
 import { FaHeart } from "react-icons/fa";
 import { useSelector } from "react-redux";
 
-function PostPage() {
-  const { postSlug } = useParams();
+function PostPreviewPage() {
+  const { postId } = useParams();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [post, setPost] = useState(null);
@@ -24,8 +24,9 @@ function PostPage() {
     const fetchPost = async () => {
       try {
         setLoading(true);
-        const res = await fetch(`/api/post/get-posts?slug=${postSlug}`);
+        const res = await fetch(`/api/post/get-post/${postId}`);
         const data = await res.json();
+
         if (!res.ok) {
           setError(data.message);
           setLoading(false);
@@ -33,7 +34,7 @@ function PostPage() {
         } else {
           setError(false);
           setLoading(false);
-          setPost(data.posts[0]);
+          setPost(data.post);
         }
       } catch (error) {
         setError(false);
@@ -42,7 +43,7 @@ function PostPage() {
     };
 
     fetchPost();
-  }, [postSlug]);
+  }, [postId]);
 
   useEffect(() => {
     if (!post?.userId) return;
@@ -124,7 +125,7 @@ function PostPage() {
   }
   return (
     <main className="p-3 flex flex-col max-w-6xl mx-auto min-h-screen items-center">
-      {currentUser && currentUser.isAdmin && (
+      {currentUser && (
         <div className="flex justify-between max-w-2xl w-full border-b border-slate-600 px-2 -mb-9">
           <Link to={`/update-post/${post._id}`}>
             <span className="text-teal-500 hover:underline cursor-pointer">
@@ -240,4 +241,4 @@ function PostPage() {
   );
 }
 
-export default PostPage;
+export default PostPreviewPage;

@@ -44,6 +44,18 @@ const postSchema = new mongoose.Schema({
         type: String,
         default: null,
     },
+    draftVersion: {
+        content: { type: String },
+        title: { type: String },
+        image: { type: String },
+        category: { type: String },
+        slug: { type: String },
+    },
+    updateStatus: {
+        type: String,
+        enum: ["no-update", "pending", "accepted", "rejected"],
+        default: "no-update",
+    },
 }, { timestamps: true });
 
 const Post = mongoose.model("Post", postSchema);

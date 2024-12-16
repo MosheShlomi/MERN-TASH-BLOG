@@ -1,6 +1,6 @@
 import { Button, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PostCard from "../components/PostCard";
 
 function Search() {
@@ -110,6 +110,16 @@ function Search() {
     <div className="flex flex-col md:flex-row">
       <div className="p-7 border-b md:border-ri md:min-h-screen border-gray-500">
         <form className="flex flex-col gap-8" onSubmit={handleSubmit}>
+          <div className="flex-1 border-b border-gray-500 pb-3">
+            <Link to="/create-post">
+              <Button
+                gradientDuoTone="purpleToPink"
+                type="button"
+                className="w-full">
+                פוסט חדש
+              </Button>
+            </Link>
+          </div>
           <div className="flex items-center gap-2">
             <label className="whitespace-nowrap font-semibold flex-1">
               טקסט חיפוש:
@@ -124,14 +134,22 @@ function Search() {
             />
           </div>
           <div className="flex items-center gap-2">
-            <label className="whitespace-nowrap font-semibold flex-1">סדר:</label>
-            <Select onChange={handleChange} value={sideBarData.sort} id="sort" className="flex-1">
-              <option value="desc">Latest</option>
-              <option value="asc">Oldest</option>
+            <label className="whitespace-nowrap font-semibold flex-1">
+              סדר:
+            </label>
+            <Select
+              onChange={handleChange}
+              value={sideBarData.sort}
+              id="sort"
+              className="flex-1">
+              <option value="desc">חדשים קודם</option>
+              <option value="asc">ישנים קודם</option>
             </Select>
           </div>
           <div className="flex items-center gap-2">
-            <label className="whitespace-nowrap font-semibold flex-1">קטגוריה:</label>
+            <label className="whitespace-nowrap font-semibold flex-1">
+              קטגוריה:
+            </label>
             <Select
               onChange={handleChange}
               value={sideBarData.category}

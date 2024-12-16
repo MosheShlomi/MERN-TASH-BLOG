@@ -11,12 +11,16 @@ function DashPosts() {
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
 
+  const hebrewNames = {
+    pending: "ממתין לאישור",
+    published: "פורסם",
+    rejected: "נדחה",
+  };
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(
-          `/api/post/get-posts?userId=${currentUser._id}`
-        );
+        const res = await fetch(`/api/post/get-dash-posts`);
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
@@ -28,16 +32,14 @@ function DashPosts() {
         console.log(error.message);
       }
     };
-    if (currentUser.isAdmin) {
-      fetchPosts();
-    }
+    fetchPosts();
   }, [currentUser._id]);
 
   const handleShowMore = async () => {
     const startIndex = userPosts.length;
     try {
       const res = await fetch(
-        `/api/post/get-posts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `/api/post/get-dash-posts?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -50,13 +52,13 @@ function DashPosts() {
       console.log(error.message);
     }
   };
+
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(
-        `/api/post/delete-post/${postIdToDelete}/${currentUser._id}`,
-        { method: "DELETE" }
-      );
+      const res = await fetch(`/api/post/delete-post/${postIdToDelete}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
@@ -72,7 +74,7 @@ function DashPosts() {
 
   return (
     <div className="table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {currentUser.isAdmin && userPosts.length > 0 ? (
+      {userPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md text-right">
             <Table.Head>
@@ -80,10 +82,11 @@ function DashPosts() {
               <Table.HeadCell>תמונה ראשית</Table.HeadCell>
               <Table.HeadCell>כותרת</Table.HeadCell>
               <Table.HeadCell>קטגוריה</Table.HeadCell>
-              <Table.HeadCell>מחיקה</Table.HeadCell>
+              <Table.HeadCell>סטטוס</Table.HeadCell>
               <Table.HeadCell>
                 <span>עריכה</span>
               </Table.HeadCell>
+              <Table.HeadCell>מחיקה</Table.HeadCell>
             </Table.Head>
             {userPosts.map((post, index) => (
               <Table.Body className="divide-y" key={`${post._id}-${index}`}>
@@ -113,6 +116,29 @@ function DashPosts() {
                   </Table.Cell>
                   <Table.Cell>{post.category}</Table.Cell>
                   <Table.Cell>
+                    {hebrewNames[post.status]}
+                    <br />
+                    {!currentUser.isAdmin &&
+                      post.updateStatus === "accepted" && (
+                        <span className="text-xs border-t border-gray-500 text-green-600 dark:text-green-400">
+                          בקשה לעדכון אושרה
+                        </span>
+                      )}
+                    {!currentUser.isAdmin &&
+                      post.updateStatus === "rejected" && (
+                        <span className="text-xs border-t border-gray-500 text-red-600 dark:text-red-400">
+                          בקשה לעדכון נידחתה
+                        </span>
+                      )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <Link to={`/update-post/${post._id}`}>
+                      <span className="text-teal-500 hover:underline cursor-pointer">
+                        עריכה
+                      </span>
+                    </Link>
+                  </Table.Cell>
+                  <Table.Cell>
                     <span
                       onClick={() => {
                         setShowModal(true);
@@ -121,13 +147,6 @@ function DashPosts() {
                       className="font-medium text-red-500 hover:underline cursor-pointer">
                       מחיקה
                     </span>
-                  </Table.Cell>
-                  <Table.Cell>
-                    <Link to={`/update-post/${post._id}/${post.userId}`}>
-                      <span className="text-teal-500 hover:underline cursor-pointer">
-                        עריכה
-                      </span>
-                    </Link>
                   </Table.Cell>
                 </Table.Row>
               </Table.Body>

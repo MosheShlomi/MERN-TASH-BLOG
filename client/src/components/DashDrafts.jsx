@@ -20,9 +20,7 @@ function DashDrafts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const res = await fetch(
-          `/api/post/get-draft-posts?userId=${currentUser._id}`
-        );
+        const res = await fetch(`/api/post/get-draft-posts`);
         const data = await res.json();
         if (res.ok) {
           setDraftPosts(data.posts);
@@ -45,7 +43,7 @@ function DashDrafts() {
     const startIndex = draftPosts.length;
     try {
       const res = await fetch(
-        `/api/post/get-draft-posts?userId=${currentUser._id}&startIndex=${startIndex}`
+        `/api/post/get-draft-posts?startIndex=${startIndex}`
       );
       const data = await res.json();
       if (res.ok) {
@@ -62,10 +60,9 @@ function DashDrafts() {
   const handleDeletePost = async () => {
     setShowModal(false);
     try {
-      const res = await fetch(
-        `/api/post/delete-post/${postToDelete._id}/${postToDelete.userId}`,
-        { method: "DELETE" }
-      );
+      const res = await fetch(`/api/post/delete-post/${postToDelete._id}`, {
+        method: "DELETE",
+      });
       const data = await res.json();
       if (!res.ok) {
         console.log(data.message);
@@ -79,28 +76,39 @@ function DashDrafts() {
     }
   };
 
-  const handlePublishPost = async (post) => {
+  const changePostStatus = async (postId, newStatus) => {
     try {
-      const res = await fetch(
-        `/api/post/delete-post/${postToDelete._id}/${postToDelete.userId}`,
-        { method: "DELETE" }
-      );
+      const res = await fetch(`/api/post/change-status/${postId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus }),
+      });
+
       const data = await res.json();
+
       if (!res.ok) {
-        console.log(data.message);
-      } else {
-        setDraftPosts((prev) =>
-          prev.filter((post) => post._id !== postToDelete._id)
-        );
+        console.error(`Failed to change post status: ${data.message}`);
+        return;
       }
+
+      setDraftPosts((prev) => {
+        if (newStatus === "published") {
+          return prev.filter((post) => post._id !== postId);
+        } else if (newStatus === "rejected") {
+          return prev.map((post) =>
+            post._id === postId ? { ...post, status: newStatus } : post
+          );
+        }
+        return prev;
+      });
     } catch (error) {
-      console.log(error.message);
+      console.error(`Error changing post status: ${error.message}`);
     }
   };
 
   return (
     <div className=" table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {draftPosts.length > 0 ? (
+      {currentUser.isAdmin && draftPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md text-right">
             <Table.Head>
@@ -114,7 +122,7 @@ function DashDrafts() {
               <Table.HeadCell>
                 <span>עריכה</span>
               </Table.HeadCell>
-              {currentUser.isAdmin && <Table.HeadCell>פרסם</Table.HeadCell>}
+              <Table.HeadCell>פעולות</Table.HeadCell>
 
               <Table.HeadCell>מחיקה</Table.HeadCell>
             </Table.Head>
@@ -145,30 +153,67 @@ function DashDrafts() {
                     </Link>
                   </Table.Cell>
                   <Table.Cell>{post.category}</Table.Cell>
-                  <Table.Cell>{hebrewNames[post.status]}</Table.Cell>
-
                   <Table.Cell>
-                    <Link to={`/update-post/${post._id}/${post.userId}`}>
-                      {!currentUser.isAdmin && post.status === "published" ? (
-                        "לא ניתן לערוך"
-                      ) : (
-                        <span className="text-teal-500 hover:underline cursor-pointer">
-                          עריכה
+                    {hebrewNames[post.status]}
+                    <br />
+                    {!currentUser.isAdmin &&
+                      post.updateStatus === "pending" && (
+                        <span className="text-xs border-t border-gray-500 text-yellow-600 dark:text-yellow-400">
+                          בקשה לעדכון נשלחה
                         </span>
                       )}
+                    {!currentUser.isAdmin &&
+                      post.updateStatus === "accepted" && (
+                        <span className="text-xs border-t border-gray-500 text-green-600 dark:text-green-400">
+                          בקשה לעדכון אושרה
+                        </span>
+                      )}
+                    {!currentUser.isAdmin &&
+                      post.updateStatus === "rejected" && (
+                        <span className="text-xs border-t border-gray-500 text-red-600 dark:text-red-400">
+                          בקשה לעדכון נידחתה
+                        </span>
+                      )}
+
+                    {currentUser.isAdmin && post.updateStatus === "pending" && (
+                      <span className="text-xs border-t border-gray-500 text-yellow-600 dark:text-yellow-400">
+                        קיימת בקשה לעדכון
+                      </span>
+                    )}
+                  </Table.Cell>
+
+                  <Table.Cell>
+                    <Link to={`/update-post/${post._id}`}>
+                      <span className="text-teal-500 hover:underline cursor-pointer">
+                        עריכה
+                      </span>
                     </Link>
                   </Table.Cell>
-                  {currentUser.isAdmin && (
-                    <Table.Cell>
-                      <span
-                        onClick={() => {
-                          handlePublishPost(post);
-                        }}
-                        className="font-medium text-red-500 hover:underline cursor-pointer">
-                        פרסם
-                      </span>
-                    </Table.Cell>
-                  )}
+                  <Table.Cell>
+                    {post.status !== "rejected" && (
+                      <>
+                        {post.status === "pending" && (
+                          <span className="flex flex-nowrap">
+                            <span
+                              onClick={() => {
+                                changePostStatus(post._id, "published");
+                              }}
+                              className="font-medium text-yellow-500 hover:underline cursor-pointer">
+                              פרסם
+                            </span>{" "}
+                            /{" "}
+                            <span
+                              onClick={() => {
+                                changePostStatus(post._id, "rejected");
+                              }}
+                              className="font-medium text-pink-500 hover:underline cursor-pointer">
+                              דחה
+                            </span>
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </Table.Cell>
 
                   <Table.Cell>
                     <span

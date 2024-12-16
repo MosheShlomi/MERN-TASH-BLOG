@@ -68,9 +68,9 @@ const DashSidebar = () => {
             </Sidebar.Item>
           </Link>
           {!currentUser.isAdmin && (
-            <Link to="/dashboard?tab=drafts">
+            <Link to="/dashboard?tab=posts">
               <Sidebar.Item
-                active={tab === "drafts"}
+                active={tab === "posts"}
                 icon={HiDocumentText}
                 className="cursor-pointer"
                 as="div">

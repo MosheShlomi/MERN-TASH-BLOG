@@ -33,8 +33,18 @@ body {
   margin: 1.5rem 0;
 }
 
+.post-content ul li {
+  margin: 1.15rem 0 1.15rem 1.3rem;
+  list-style-type: circle;
+}
+
+.post-content ol li {
+  margin: 1.15rem 0 1.15rem 1.3rem;
+  list-style-type: decimal;
+}
+
 .post-content a {
-  color: rgb(73, 149, 199);
+  color: #4995c7;
   text-decoration: none;
 }
 
@@ -42,9 +52,31 @@ body {
   text-decoration: underline;
 }
 
+.post-content pre {
+  background-color: #1e293b;
+  border: 1px solid rgb(61, 69, 83);
+  color: #e8e7e7;
+  white-space: pre-wrap;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.post-content code {
+  background-color: #ececec;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.9rem;
+}
+
+.dark .post-content code {
+  background-color: #1e293b;
+  border: 1px solid rgb(61, 69, 83);
+}
+
 .dark .post-content a {
   color: red;
-}
+} 
 
 :root.bg-white {
   background-color: green !important;

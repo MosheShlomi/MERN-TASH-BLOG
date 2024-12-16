@@ -21,26 +21,22 @@ const UpdatePost = () => {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
+  const [applyDraft, setApplyDraft] = useState(false);
 
   const navigate = useNavigate();
-  const { postId, postUserId } = useParams();
+  const { postId } = useParams();
 
   useEffect(() => {
-    if (!currentUser.isAdmin && postUserId !== currentUser._id) {
-      navigate("/");
-    }
     try {
       const fetchPost = async () => {
-        const res = await fetch(`/api/post/get-posts?postId=${postId}&status=all`);
+        const res = await fetch(`/api/post/get-post/${postId}`);
         const data = await res.json();
         if (!res.ok) {
           setPublishError(data.message);
           return;
         } else {
           setPublishError(null);
-          setFormData(data.posts[0]);
-          console.log(formData);
-          
+          setFormData(data.post);
         }
       };
       if (currentUser) fetchPost();
@@ -70,7 +66,7 @@ const UpdatePost = () => {
     },
   };
 
-  const handleUploadImage = async () => {
+  const handleUploadImage = async (type = "") => {
     try {
       if (!file) {
         setImageUploadError("אנא בחר תמונה!");
@@ -97,7 +93,17 @@ const UpdatePost = () => {
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             setImageUploadProgress(null);
             setImageUploadError(null);
-            setFormData({ ...formData, image: downloadURL });
+            if (type === "draft") {
+              setFormData({
+                ...formData,
+                draftVersion: {
+                  ...formData.draftVersion,
+                  image: downloadURL,
+                },
+              });
+            } else {
+              setFormData({ ...formData, image: downloadURL });
+            }
           });
         }
       );
@@ -111,27 +117,32 @@ const UpdatePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch(
-        `/api/post/update-post/${formData._id}/${currentUser._id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch(`/api/post/update-post/${formData._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
       const data = await res.json();
+
       if (!res.ok || data.success === false) {
         setPublishError(data.message);
         return;
       } else {
         setPublishError(null);
-        navigate(`/post/${data.slug}`);
+
+        navigate(`/post/preview/${formData._id}`);
       }
     } catch (error) {
       setPublishError("משהו נכשל בדרך.");
     }
+  };
+
+  const handleDraftSubmit = async (e) => {
+    e.preventDefault();
+    formData.applyDraft = true;
+    handleSubmit(e);
   };
 
   return (
@@ -141,18 +152,24 @@ const UpdatePost = () => {
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
           <TextInput
             type="text"
-            placeholder="Title"
+            placeholder="כותרת"
             id="title"
             required
             className="flex-1"
             onChange={(e) =>
-              setFormData({ ...formData, title: e.target.value })
+              setFormData({
+                ...formData,
+                title: e.target.value,
+              })
             }
             value={formData.title}
           />
           <Select
             onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
+              setFormData({
+                ...formData,
+                category: e.target.value,
+              })
             }
             value={formData.category}>
             <option value="uncategorized">בחר קטגוריה</option>
@@ -187,6 +204,21 @@ const UpdatePost = () => {
           </Button>
         </div>
         {imageUploadError && <Alert color="failure">{imageUploadError}</Alert>}
+        {currentUser.isAdmin && (
+          <Select
+            onChange={(e) =>
+              setFormData({
+                ...formData,
+                status: e.target.value,
+              })
+            }
+            value={formData.status}>
+            <option value="pending">ממתין לאישור</option>
+            <option value="published">פורסם</option>
+            <option value="rejected">נדחה</option>
+          </Select>
+        )}
+
         {formData.image && (
           <img
             src={formData.image}
@@ -217,7 +249,12 @@ const UpdatePost = () => {
             "video",
           ]}
           modules={modules}
-          onChange={(value) => setFormData({ ...formData, content: value })}
+          onChange={(value) =>
+            setFormData({
+              ...formData,
+              content: value,
+            })
+          }
           value={formData.content}
         />
 
@@ -230,15 +267,136 @@ const UpdatePost = () => {
           </Alert>
         )}
       </form>
+      {!formData.draftVersion && (
+        <div>
+          <h2 className="text-xl font-bold flex justify-center mt-8">
+            תצוגה מקדימה
+          </h2>
+          <div
+            className="max-w-3xl mx-auto w-full post-content"
+            dangerouslySetInnerHTML={{ __html: formData.content }}></div>
+        </div>
+      )}
 
-      <div>
-        <h2 className="text-xl font-bold flex justify-center mt-8">
-          תצוגה מקדימה
-        </h2>
-        <div
-          className="max-w-3xl mx-auto w-full post-content"
-          dangerouslySetInnerHTML={{ __html: formData.content }}></div>
-      </div>
+      {/* if there is also a draft version show them one after another */}
+      {currentUser.isAdmin && formData.draftVersion && (
+        <form className="flex flex-col gap-4 mt-8" onSubmit={handleDraftSubmit}>
+          <h1 className="w-full text-center">שינויים חדשים של יוצר הפוסט</h1>
+          <div className="flex flex-col gap-4 sm:flex-row justify-between">
+            <TextInput
+              type="text"
+              placeholder="כותרת"
+              id="title"
+              required
+              className="flex-1"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  draftVersion: {
+                    ...formData.draftVersion,
+                    title: e.target.value,
+                  },
+                })
+              }
+              value={formData.draftVersion.title}
+            />
+            <Select
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  draftVersion: {
+                    ...formData.draftVersion,
+                    category: e.target.value,
+                  },
+                })
+              }
+              value={formData.draftVersion.category}>
+              <option value="uncategorized">בחר קטגוריה</option>
+              <option value="תשמש">תשמש</option>
+              <option value="מיוחדת">מיוחדת</option>
+              <option value="חוגר">חוגר</option>
+            </Select>
+          </div>
+          <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+            <FileInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => setFile(e.target.files[0])}
+            />
+            <Button
+              type="button"
+              gradientDuoTone="purpleToBlue"
+              size="sm"
+              outline
+              onClick={() => handleUploadImage("draft")}
+              disabled={imageUploadProgress}>
+              {imageUploadProgress ? (
+                <div className="w-16 h-16 ">
+                  <CircularProgressbar
+                    value={imageUploadProgress}
+                    text={`${imageUploadProgress || 0}%`}
+                  />
+                </div>
+              ) : (
+                "העלה תמונה"
+              )}
+            </Button>
+          </div>
+          {imageUploadError && (
+            <Alert color="failure">{imageUploadError}</Alert>
+          )}
+          {formData.draftVersion.image && (
+            <img
+              src={formData.draftVersion.image}
+              alt="Uploaded image"
+              className="w-full h-72 object-cover"
+            />
+          )}
+
+          <ReactQuill
+            theme="snow"
+            placeholder="רשום משהו..."
+            className="h-72 mb-12"
+            required
+            formats={[
+              "header",
+              "font",
+              "size",
+              "bold",
+              "italic",
+              "underline",
+              "strike",
+              "blockquote",
+              "list",
+              "bullet",
+              "indent",
+              "link",
+              "image",
+              "video",
+            ]}
+            modules={modules}
+            onChange={(value) =>
+              setFormData({
+                ...formData,
+                draftVersion: {
+                  ...formData.draftVersion,
+                  content: value,
+                },
+              })
+            }
+            value={formData.draftVersion.content}
+          />
+
+          <Button type="submit" gradientDuoTone="purpleToPink">
+            עדכן פוסט קיים עם שינויים של יוצר הפוסט
+          </Button>
+          {publishError && (
+            <Alert color="failure" className="mt-5">
+              {publishError}
+            </Alert>
+          )}
+        </form>
+      )}
     </div>
   );
 };

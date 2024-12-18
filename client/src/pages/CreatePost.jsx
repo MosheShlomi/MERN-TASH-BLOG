@@ -97,7 +97,7 @@ const CreatePost = () => {
         return;
       } else {
         setPublishError(null);
-        navigate(`/post/${data.slug}`);
+        navigate(`/post/preview/${data._id}`);
       }
     } catch (error) {
       setPublishError("משהו נכשל בדרך.");
@@ -185,7 +185,14 @@ const CreatePost = () => {
             "video",
           ]}
           modules={modules}
-          onChange={(value) => setFormData({ ...formData, content: value })}
+          onChange={(newValue, delta, source) => {
+            if (source === "user") {
+              setFormData({
+                ...formData,
+                content: newValue,
+              });
+            }
+          }}
         />
 
         <Button type="submit" gradientDuoTone="purpleToPink">

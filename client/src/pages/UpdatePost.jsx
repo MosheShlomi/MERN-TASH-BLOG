@@ -21,7 +21,6 @@ const UpdatePost = () => {
   const [imageUploadError, setImageUploadError] = useState(null);
   const [formData, setFormData] = useState({});
   const [publishError, setPublishError] = useState(null);
-  const [applyDraft, setApplyDraft] = useState(false);
 
   const navigate = useNavigate();
   const { postId } = useParams();
@@ -35,6 +34,10 @@ const UpdatePost = () => {
           setPublishError(data.message);
           return;
         } else {
+          if (!currentUser.isAdmin && data.post.statsu === "rejected") {
+            setPublishError("כבר אין לך גישה");
+            return;
+          }
           setPublishError(null);
           setFormData(data.post);
         }
@@ -43,7 +46,7 @@ const UpdatePost = () => {
     } catch (error) {
       console.log(error.message);
     }
-  }, [postId]);
+  }, [postId, currentUser._id]);
 
   // Quill modules configuration
   const modules = {
@@ -116,6 +119,7 @@ const UpdatePost = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const res = await fetch(`/api/post/update-post/${formData._id}`, {
         method: "PUT",
@@ -139,9 +143,15 @@ const UpdatePost = () => {
     }
   };
 
-  const handleDraftSubmit = async (e) => {
+  const handleAcceptChanges = async (e) => {
     e.preventDefault();
     formData.applyDraft = true;
+    handleSubmit(e);
+  };
+
+  const handleDenyChanges = async (e) => {
+    e.preventDefault();
+    formData.applyDraft = false;
     handleSubmit(e);
   };
 
@@ -249,12 +259,14 @@ const UpdatePost = () => {
             "video",
           ]}
           modules={modules}
-          onChange={(value) =>
-            setFormData({
-              ...formData,
-              content: value,
-            })
-          }
+          onChange={(newValue, delta, source) => {
+            if (source === "user") {
+              setFormData({
+                ...formData,
+                content: newValue,
+              });
+            }
+          }}
           value={formData.content}
         />
 
@@ -280,7 +292,7 @@ const UpdatePost = () => {
 
       {/* if there is also a draft version show them one after another */}
       {currentUser.isAdmin && formData.draftVersion && (
-        <form className="flex flex-col gap-4 mt-8" onSubmit={handleDraftSubmit}>
+        <form className="flex flex-col gap-4 mt-8">
           <h1 className="w-full text-center">שינויים חדשים של יוצר הפוסט</h1>
           <div className="flex flex-col gap-4 sm:flex-row justify-between">
             <TextInput
@@ -375,21 +387,36 @@ const UpdatePost = () => {
               "video",
             ]}
             modules={modules}
-            onChange={(value) =>
-              setFormData({
-                ...formData,
-                draftVersion: {
-                  ...formData.draftVersion,
-                  content: value,
-                },
-              })
-            }
+            onChange={(newValue, delta, source) => {
+              if (source === "user") {
+                setFormData({
+                  ...formData,
+                  draftVersion: {
+                    ...formData.draftVersion,
+                    content: newValue,
+                  },
+                });
+              }
+            }}
             value={formData.draftVersion.content}
           />
-
-          <Button type="submit" gradientDuoTone="purpleToPink">
-            עדכן פוסט קיים עם שינויים של יוצר הפוסט
-          </Button>
+          <div className="flex gap-3">
+            <Button
+              type="button"
+              gradientDuoTone="purpleToPink"
+              className="flex-1"
+              onClick={handleAcceptChanges}>
+              הכנס שינויים
+            </Button>
+            <Button
+              type="button"
+              gradientDuoTone="purpleToPink"
+              outline
+              className="flex-1"
+              onClick={handleDenyChanges}>
+              דחה שינויים
+            </Button>
+          </div>
           {publishError && (
             <Alert color="failure" className="mt-5">
               {publishError}

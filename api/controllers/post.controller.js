@@ -214,6 +214,9 @@ export const updatePost = async (req, res, next) => {
 
                     updateFields.draftVersion = null;
                     updateFields.updateStatus = "accepted";
+                } else if (updateData.applyDraft === false && updateData.draftVersion) {
+                    updateFields.draftVersion = null;
+                    updateFields.updateStatus = "rejected";
                 } else {
                     updateFields.draftVersion = post.draftVersion;
                 }
@@ -273,9 +276,8 @@ export const getPostsForDashboard = async (req, res, next) => {
             };
         } else {
             filters = {
-                $or: [
-                    { status: { $in: ["published",] } },
-                ],
+                status: "published",
+                updateStatus: { $ne: "pending" },
             };
         }
 

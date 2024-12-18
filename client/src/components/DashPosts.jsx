@@ -17,6 +17,12 @@ function DashPosts() {
     rejected: "נדחה",
   };
 
+  const statusColors = {
+    pending: "text-yellow-600 dark:text-yellow-400",
+    published: "text-green-600 dark:text-green-400",
+    rejected: "text-red-600 dark:text-red-400",
+  };
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -99,7 +105,7 @@ function DashPosts() {
                     })}
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/post/${post.slug}`}>
+                    <Link to={`/post/preview/${post._id}`}>
                       <img
                         src={post.image}
                         alt={post.title}
@@ -109,34 +115,45 @@ function DashPosts() {
                   </Table.Cell>
                   <Table.Cell>
                     <Link
-                      to={`/post/${post.slug}`}
+                      to={`/post/preview/${post._id}`}
                       className="font-medium text-gray-900 dark:text-white">
                       {post.title}
                     </Link>
                   </Table.Cell>
                   <Table.Cell>{post.category}</Table.Cell>
                   <Table.Cell>
-                    {hebrewNames[post.status]}
+                    <span className={statusColors[post.status]}>
+                      {hebrewNames[post.status]}
+                    </span>
                     <br />
                     {!currentUser.isAdmin &&
                       post.updateStatus === "accepted" && (
-                        <span className="text-xs border-t border-gray-500 text-green-600 dark:text-green-400">
+                        <span className="text-xs border-t border-gray-300 text-green-600 dark:border-gray-700 dark:text-green-400 p-1 block">
                           בקשה לעדכון אושרה
                         </span>
                       )}
                     {!currentUser.isAdmin &&
                       post.updateStatus === "rejected" && (
-                        <span className="text-xs border-t border-gray-500 text-red-600 dark:text-red-400">
+                        <span className="text-xs border-t border-gray-300 text-red-600 dark:border-gray-700 dark:text-red-400 p-1 block">
                           בקשה לעדכון נידחתה
+                        </span>
+                      )}
+                    {!currentUser.isAdmin &&
+                      post.updateStatus === "pending" && (
+                        <span className="text-xs border-t border-gray-300 text-yellow-600 dark:border-gray-700 dark:text-yellow-400 p-1 block">
+                          בקשה לעדכון נשלחה
                         </span>
                       )}
                   </Table.Cell>
                   <Table.Cell>
-                    <Link to={`/update-post/${post._id}`}>
-                      <span className="text-teal-500 hover:underline cursor-pointer">
-                        עריכה
-                      </span>
-                    </Link>
+                    {currentUser.isAdmin ||
+                      (post.status !== "rejected" && (
+                        <Link to={`/update-post/${post._id}`}>
+                          <span className="text-teal-500 hover:underline cursor-pointer">
+                            עריכה
+                          </span>
+                        </Link>
+                      ))}
                   </Table.Cell>
                   <Table.Cell>
                     <span

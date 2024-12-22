@@ -116,6 +116,15 @@ const DashSidebar = () => {
                   תגובות
                 </Sidebar.Item>
               </Link>
+              <Link to="/dashboard?tab=categories">
+                <Sidebar.Item
+                  active={tab === "categories"}
+                  icon={HiAnnotation}
+                  className="cursor-pointer"
+                  as="div">
+                  ניהול קטגוריות
+                </Sidebar.Item>
+              </Link>
             </>
           )}
 

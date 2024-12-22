@@ -12,6 +12,7 @@ function Search() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showMore, setShowMore] = useState(false);
+  const [categories, setCategories] = useState([]);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -54,6 +55,22 @@ function Search() {
     fetchPosts();
   }, [location.search]);
 
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`/api/category/get-categories`);
+        const data = await res.json();
+        if (res.ok) {
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("שגיאה בשליפת הקטגוריות:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleChange = (e) => {
     if (e.target.id === "searchTerm") {
       setSideBarData({
@@ -69,7 +86,7 @@ function Search() {
       });
     }
     if (e.target.id === "category") {
-      const category = e.target.value || "uncategorized";
+      const category = e.target.value || "";
       setSideBarData({
         ...sideBarData,
         category,
@@ -155,10 +172,14 @@ function Search() {
               value={sideBarData.category}
               className="flex-1"
               id="category">
-              <option value="uncategorized">Uncategorized</option>
-              <option value="תשמש">תשמש</option>
-              <option value="מיוחדת">מיוחדת</option>
-              <option value="חוגר">חוגר</option>
+              <option value="">הכל</option>
+
+              {categories &&
+                categories.map((category) => (
+                  <option value={category.name} key={category._id}>
+                    {category.name}
+                  </option>
+                ))}
             </Select>
           </div>
           <Button type="submit" outline gradientDuoTone="purpleToPink">
@@ -172,7 +193,7 @@ function Search() {
         </h1>
         <div className="p-7 flex flex-wrap gap-4 justify-center">
           {!loading && posts.length === 0 && (
-            <p className="text-xl text-gray-500">No posts found.</p>
+            <p className="text-xl text-gray-500">לא נמצאו פוסטים.</p>
           )}
           {loading && <p className="text-xl text-gray-500">טוען...</p>}
           {!loading &&

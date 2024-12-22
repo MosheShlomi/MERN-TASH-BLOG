@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
@@ -17,10 +17,46 @@ const CreatePost = () => {
   const [file, setFile] = useState(null);
   const [imageUploadProgress, setImageUploadProgress] = useState(null);
   const [imageUploadError, setImageUploadError] = useState(null);
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState({
+    category: [],
+  });
+
   const [publishError, setPublishError] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  // Close the dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await fetch(`/api/category/get-categories`);
+        const data = await res.json();
+        if (res.ok) {
+          setCategories(data);
+        }
+      } catch (error) {
+        console.error("שגיאה בשליפת הקטגוריות:", error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   // Quill modules configuration
   const modules = {
@@ -119,15 +155,49 @@ const CreatePost = () => {
               setFormData({ ...formData, title: e.target.value })
             }
           />
-          <Select
-            onChange={(e) =>
-              setFormData({ ...formData, category: e.target.value })
-            }>
-            <option value="uncategorized">בחר קטגוריה</option>
-            <option value="תשמש">תשמש</option>
-            <option value="מיוחדת">מיוחדת</option>
-            <option value="חוגר">חוגר</option>
-          </Select>
+          <div className="relative" ref={dropdownRef}>
+            <Button
+              type="button"
+              className="w-full"
+              gradientDuoTone="purpleToPink"
+              size="sm"
+              onClick={() => setDropdownOpen(!dropdownOpen)}>
+              בחר קטגוריות ↓
+            </Button>
+            {dropdownOpen && (
+              <div className="absolute z-10 bg-white dark:border-gray-700 dark:bg-gray-800 border rounded shadow-md p-2 w-full max-h-48 overflow-y-auto">
+                {categories.map((category) => (
+                  <label key={category._id} className="block px-2 py-1">
+                    <input
+                      type="checkbox"
+                      className="ml-2"
+                      value={category._id}
+                      checked={
+                        formData.category?.includes(category._id) || false
+                      } // Default to false if undefined
+                      onChange={(e) => {
+                        const selectedCategories = formData.category || [];
+                        if (e.target.checked) {
+                          setFormData({
+                            ...formData,
+                            category: [...selectedCategories, category._id],
+                          });
+                        } else {
+                          setFormData({
+                            ...formData,
+                            category: selectedCategories.filter(
+                              (id) => id !== category._id
+                            ),
+                          });
+                        }
+                      }}
+                    />
+                    {category.name}
+                  </label>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
         <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
           <FileInput

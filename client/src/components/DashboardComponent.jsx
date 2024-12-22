@@ -205,7 +205,11 @@ function DashboardComponent() {
                       />
                     </Table.Cell>
                     <Table.Cell className="w-96">{post.title}</Table.Cell>
-                    <Table.Cell className="w-5">{post.category}</Table.Cell>
+                    {post.category && (
+                      <Table.Cell className="w-5">
+                        {post.category.map((cat) => cat.name).join(", ")}
+                      </Table.Cell>
+                    )}
                   </Table.Row>
                 </Table.Body>
               ))}

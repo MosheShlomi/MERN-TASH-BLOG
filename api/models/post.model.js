@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+import Category from './category.model.js';
+
 const postSchema = new mongoose.Schema({
     userId: {
         type: String,
@@ -18,10 +20,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         default: "https://www.hostinger.com/tutorials/wp-content/uploads/sites/2/2021/09/how-to-write-a-blog-post.webp"
     },
-    category: {
-        type: String,
-        default: 'uncategorized'
-    },
+    category: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+    }],
     slug: {
         type: String,
         required: true,

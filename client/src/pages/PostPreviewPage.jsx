@@ -145,13 +145,19 @@ function PostPreviewPage() {
       <h1 className="text-3xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto lg:text-4xl">
         {post && post.title}
       </h1>
-      <Link
-        to={`/search?category=${post && post.category}`}
-        className="self-center mt-2">
-        <Button color="gray" pill size="xs">
-          {post && post.category}
-        </Button>
-      </Link>
+
+      <div className="flex gap-2 flex-wrap justify-center">
+        {post.category &&
+          post.category.map((cat) => (
+            <Link
+              to={`/search?category=${cat.name}`}
+              className="self-center mt-2">
+              <Button color="gray" pill size="xs">
+                {cat.name}
+              </Button>
+            </Link>
+          ))}
+      </div>
 
       <img
         src={post && post.image}

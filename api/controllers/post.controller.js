@@ -1,11 +1,8 @@
 import Post from "../models/post.model.js";
+import Category from '../models/category.model.js';
 import { errorHandler } from "../utils/error.js";
 
-//new code !!!!
-//
-//
-//
-//
+
 const parsePagination = (query) => ({
     startIndex: parseInt(query.startIndex) || 0,
     limit: parseInt(query.limit) || 9,
@@ -18,7 +15,6 @@ const generateSlug = (title) => title
     .toLowerCase()
     .replace(/[^a-zA-Z0-9-\u0590-\u05FF]/g, "");
 
-//done
 export const create = async (req, res, next) => {
     const { title, content, category } = req.body;
     const { isAdmin, id: userId } = req.user;
@@ -29,12 +25,14 @@ export const create = async (req, res, next) => {
 
     const slug = generateSlug(title);
 
+    const categories = Array.isArray(category) ? category : [];
+
     const newPost = new Post({
         title,
         content,
         slug,
         userId,
-        category: category || undefined,
+        category: categories,
         status: isAdmin ? "published" : "pending",
         approvedBy: isAdmin ? userId : null,
     });
@@ -47,26 +45,45 @@ export const create = async (req, res, next) => {
     }
 };
 
-const buildPostFilters = (query) => ({
-    ...(query.userId && { userId: query.userId }),
-    ...(query.category && { category: query.category }),
-    ...(query.slug && { slug: query.slug }),
-    ...(query.postId && { _id: query.postId }),
-    ...(query.searchTerm && {
-        $or: [
-            { title: { $regex: query.searchTerm, $options: "i" } },
-            { content: { $regex: query.searchTerm, $options: "i" } },
-        ],
-    }),
-    ...({ status: "published" }),
-    // ...(query.status === "all" ? {} : { status: "published" }),
-    // ...(user.isAdmin ? {} : { userId: user.id }),
-});
+
+const buildPostFilters = async (query) => {
+    let categoryFilter = {};
+
+    if (query.category) {
+        try {
+            const category = await Category.findOne({ name: query.category }).exec();
+
+            if (category) {
+                categoryFilter = { category: category._id };
+            } else {
+                categoryFilter = {};
+            }
+        } catch (error) {
+            console.error("Error finding category:", error);
+            throw new Error("Failed to fetch category.");
+        }
+    }
+
+    return {
+        ...(query.userId && { userId: query.userId }),
+        ...categoryFilter, // Include the resolved category filter
+        ...(query.slug && { slug: query.slug }),
+        ...(query.postId && { _id: query.postId }),
+        ...(query.searchTerm && {
+            $or: [
+                { title: { $regex: query.searchTerm, $options: "i" } },
+                { content: { $regex: query.searchTerm, $options: "i" } },
+            ],
+        }),
+        status: "published",
+    };
+};
+
 
 export const getPosts = async (req, res, next) => {
     try {
         const { startIndex, limit, sortDirection } = parsePagination(req.query);
-        const filters = buildPostFilters(req.query);
+        const filters = await buildPostFilters(req.query);
 
         const now = new Date();
         const oneMonthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
@@ -77,7 +94,7 @@ export const getPosts = async (req, res, next) => {
         };
 
         const [posts, totalPosts, lastMonthPosts] = await Promise.all([
-            Post.find(filters).sort({ updatedAt: sortDirection }).skip(startIndex).limit(limit),
+            Post.find(filters).sort({ updatedAt: sortDirection }).skip(startIndex).limit(limit).populate('category'),
             Post.countDocuments(filters),
             Post.countDocuments(lastMonthFilters),
         ]);
@@ -97,7 +114,7 @@ export const getPost = async (req, res, next) => {
         const { postId } = req.params;
         const { id, isAdmin } = req.user;
 
-        const post = await Post.findById(postId);
+        const post = await Post.findById(postId).populate('category');
 
         if (!post) {
             return res.status(404).json({ message: "פוסט לא נמצא." });
@@ -158,7 +175,6 @@ export const likePost = async (req, res, next) => {
     }
 };
 
-
 export const updatePost = async (req, res, next) => {
     try {
         const postId = req.params.postId;
@@ -179,7 +195,7 @@ export const updatePost = async (req, res, next) => {
         const updateFields = {
             title: req.body.title,
             content: req.body.content,
-            category: req.body.category,
+            category: Array.isArray(req.body.category) ? req.body.category : [req.body.category],
             image: req.body.image,
             slug: req.body.title
                 ? generateSlug(req.body.title)
@@ -208,7 +224,9 @@ export const updatePost = async (req, res, next) => {
 
                     updateFields.title = req.body.draftVersion.title || post.title;
                     updateFields.content = req.body.draftVersion.content || post.content;
-                    updateFields.category = req.body.draftVersion.category || post.category;
+                    updateFields.category = Array.isArray(req.body.draftVersion.category)
+                        ? req.body.draftVersion.category
+                        : [req.body.draftVersion.category];
                     updateFields.image = req.body.draftVersion.image || post.image;
                     updateFields.slug = req.body.draftVersion.slug || post.slug;
 
@@ -284,7 +302,7 @@ export const getPostsForDashboard = async (req, res, next) => {
         const posts = await Post.find(filters)
             .sort({ updatedAt: sortDirection })
             .skip(startIndex)
-            .limit(limit);
+            .limit(limit).populate("category");
 
         res.status(200).json({ posts });
     } catch (error) {
@@ -312,16 +330,10 @@ export const getDraftPosts = async (req, res, next) => {
         const posts = await Post.find(filters)
             .sort({ updatedAt: sortDirection })
             .skip(startIndex)
-            .limit(limit);
+            .limit(limit).populate("category");
 
         res.status(200).json({ posts, });
     } catch (error) {
         next(error);
     }
 };
-
-
-
-
-
-

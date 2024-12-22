@@ -9,6 +9,7 @@ import {
   HiAnnotation,
   HiChartPie,
 } from "react-icons/hi";
+import { BiCategory } from "react-icons/bi";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { signOutSuccess } from "../redux/user/userSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -119,7 +120,7 @@ const DashSidebar = () => {
               <Link to="/dashboard?tab=categories">
                 <Sidebar.Item
                   active={tab === "categories"}
-                  icon={HiAnnotation}
+                  icon={BiCategory}
                   className="cursor-pointer"
                   as="div">
                   ניהול קטגוריות

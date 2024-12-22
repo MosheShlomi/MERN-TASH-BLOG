@@ -5,12 +5,12 @@ export const createCategory = async (req, res, next) => {
     try {
         const { name } = req.body;
 
-        const newComment = new Category({
+        const newCategory = new Category({
             name
         });
 
-        await newComment.save();
-        res.status(200).json(newComment);
+        await newCategory.save();
+        res.status(200).json(newCategory);
 
     } catch (error) {
         next(error);

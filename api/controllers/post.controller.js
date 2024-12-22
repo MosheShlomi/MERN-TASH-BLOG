@@ -66,7 +66,7 @@ const buildPostFilters = async (query) => {
 
     return {
         ...(query.userId && { userId: query.userId }),
-        ...categoryFilter, // Include the resolved category filter
+        ...categoryFilter,
         ...(query.slug && { slug: query.slug }),
         ...(query.postId && { _id: query.postId }),
         ...(query.searchTerm && {

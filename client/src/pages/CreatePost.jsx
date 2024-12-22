@@ -274,15 +274,16 @@ const CreatePost = () => {
           </Alert>
         )}
       </form>
-
-      <div>
-        <h2 className="text-xl font-bold flex justify-center mt-8">
-          תצוגה מקדימה
-        </h2>
-        <div
-          className="max-w-3xl mx-auto w-full post-content"
-          dangerouslySetInnerHTML={{ __html: formData.content }}></div>
-      </div>
+      {formData.content && (
+        <div>
+          <h2 className="text-xl font-bold flex justify-center mt-8">
+            תצוגה מקדימה
+          </h2>
+          <div
+            className="max-w-3xl mx-auto w-full post-content"
+            dangerouslySetInnerHTML={{ __html: formData.content }}></div>
+        </div>
+      )}
     </div>
   );
 };

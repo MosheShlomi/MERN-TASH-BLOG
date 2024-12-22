@@ -157,7 +157,13 @@ function DashDrafts() {
                       {post.title}
                     </Link>
                   </Table.Cell>
-                  <Table.Cell>{post.category}</Table.Cell>
+                  {post.category ? (
+                    <Table.Cell>
+                      {post.category.map((cat) => cat.name).join(", ")}
+                    </Table.Cell>
+                  ) : (
+                    <div></div>
+                  )}
                   <Table.Cell>
                     <span className={statusColors[post.status]}>
                       {hebrewNames[post.status]}

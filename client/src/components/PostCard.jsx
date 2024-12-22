@@ -14,7 +14,13 @@ function PostCard({ post }) {
       </Link>
       <div className="p-3 flex flex-col gap-2">
         <p className="text-lg font-semibold line-clamp-2">{post.title}</p>
-        <span className="italic text-sm">{post.category}</span>
+
+        {post.category && (
+          <span className="italic text-sm">
+            {post.category.map((cat) => cat.name).join(", ")}
+          </span>
+        )}
+        
         <span className="text-sm flex justify-between flex-row-reverse">
           {new Date(post.updatedAt).toLocaleDateString("he-IL", {
             day: "2-digit",

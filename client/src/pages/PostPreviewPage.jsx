@@ -50,8 +50,6 @@ function PostPreviewPage() {
 
     const getUser = async () => {
       try {
-        console.log(post.userId);
-
         const res = await fetch(`/api/user/${post.userId}`);
         const data = await res.json();
         if (res.ok) {

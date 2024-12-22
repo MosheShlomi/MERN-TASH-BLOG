@@ -1,5 +1,6 @@
 import Post from "../models/post.model.js";
 import Category from '../models/category.model.js';
+import Comment from '../models/comment.model.js';
 import { errorHandler } from "../utils/error.js";
 
 
@@ -147,11 +148,17 @@ export const deletePost = async (req, res, next) => {
 
     try {
         await Post.findByIdAndDelete(postId);
-        res.status(200).json({ message: "הפוסט נמחק." });
+
+        // Delete all comments associated with the post
+        await Comment.deleteMany({ postId });
+
+        res.status(200).json({ message: "הפוסט והתגובות הקשורות אליו נמחקו." });
     } catch (error) {
         next(error);
     }
 };
+
+
 
 export const likePost = async (req, res, next) => {
     try {

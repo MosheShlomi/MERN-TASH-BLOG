@@ -6,16 +6,6 @@ body {
   height: 100vh;
 }
 
-.ql-editor {
-  font-size: 1.05rem;
-  direction: rtl;
-  text-align: right;
-}
-
-.ql-snow .ql-picker {
-  direction: ltr;
-}
-
 .post-content p {
   margin-bottom: 0.5rem;
 }
@@ -76,7 +66,7 @@ body {
 
 .dark .post-content a {
   color: red;
-} 
+}
 
 :root.bg-white {
   background-color: green !important;
@@ -102,4 +92,50 @@ body {
   .group-last\/body\:group-last\/row\:first\:rounded-bl-lg:first-child {
   border-bottom-right-radius: 0.5rem;
   border-bottom-left-radius: 0% !important;
+}
+
+/* Custom styles for ReactQuill */
+.ql-editor {
+  font-size: 1.05rem;
+  direction: rtl;
+  text-align: right;
+}
+
+.ql-snow .ql-picker {
+  direction: ltr;
+}
+
+.dark .ql-container {
+  background-color: #1f2937;
+  color: #e5e7eb;
+  border-color: #4b5563;
+}
+
+.dark .ql-toolbar {
+  background-color: #374151;
+  border-color: #4b5563;
+}
+
+.dark .ql-toolbar .ql-picker {
+  color: #e5e7eb; /* Toolbar dropdown text */
+}
+
+.dark .ql-editor {
+  color: #e5e7eb; /* Editor text color */
+}
+
+.dark .ql-blank::before {
+  color: #ffffff; /* Placeholder color */
+}
+
+.dark .ql-snow .ql-stroke {
+  stroke: #e5e7eb; /* Icons stroke color */
+}
+
+.dark .ql-snow .ql-fill {
+  fill: #e5e7eb; /* Icons fill color */
+}
+
+.dark .ql-picker-options {
+  background-color: #374151;
 }

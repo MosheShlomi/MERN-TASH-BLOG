@@ -5,11 +5,10 @@ import Dashboard from "./pages/Dashboard";
 import About from "./pages/About";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
-import Projects from "./pages/Projects";
+import Contact from "./pages/Contact";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import PrivateRoute from "./components/PrivateRoute";
-import OnlyAdminPrivateRoute from "./components/OnlyAdminPrivateRoute";
 import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import PostPage from "./pages/PostPage";
@@ -27,17 +26,13 @@ const App = () => {
         <Route element={<PrivateRoute />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/create-post" element={<CreatePost />} />
-          <Route
-            path="/update-post/:postId"
-            element={<UpdatePost />}
-          />
+          <Route path="/update-post/:postId" element={<UpdatePost />} />
           <Route path="/post/preview/:postId" element={<PostPreviewPage />} />
         </Route>
-        {/* <Route element={<OnlyAdminPrivateRoute />}></Route> */}
         <Route path="/about" element={<About />} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/sign-in" element={<SignIn />} />
-        <Route path="/projects" element={<Projects />} />
+        <Route path="/contact" element={<Contact />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
         <Route path="/search" element={<Search />} />
       </Routes>

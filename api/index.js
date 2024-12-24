@@ -6,39 +6,33 @@ import authRoutes from "./routes/auth.route.js";
 import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import categoryRoutes from "./routes/category.route.js";
+import contactRoutes from "./routes/contact.route.js";
 import cookieParser from "cookie-parser";
 import path from 'path';
 
 dotenv.config();
 
 mongoose
-    .connect(
-        process.env.MONGO_URL
-    )
+    .connect(process.env.MONGO_URL)
     .then(() => {
         console.log("Mongodb is connected!");
     })
     .catch((err) => console.log(err));
 
 const __dirname = path.resolve();
-
 const app = express();
 
+// Middleware
 app.use(express.json());
-
-app.listen(3000, () => {
-    console.log(`Server is running on port 3000`);
-});
-
 app.use(cookieParser());
+app.use(express.static(path.join(__dirname, '/client/dist')));
 
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/category", categoryRoutes);
-
-app.use(express.static(path.join(__dirname, '/client/dist')));
+app.use("/api/contact", contactRoutes);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, "client", "dist", 'index.html'));
@@ -52,4 +46,8 @@ app.use((err, req, res, next) => {
         statusCode,
         message
     });
+});
+
+app.listen(3000, () => {
+    console.log(`Server is running on port 3000`);
 });

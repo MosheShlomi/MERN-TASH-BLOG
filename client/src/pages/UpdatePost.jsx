@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { Alert, Button, FileInput, Select, TextInput } from "flowbite-react";
@@ -13,6 +13,7 @@ import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
+import CategorySelect from "../components/CategorySelect";
 
 const UpdatePost = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -28,22 +29,6 @@ const UpdatePost = () => {
   const { postId } = useParams();
 
   const [categories, setCategories] = useState([]);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
-
-  // Close the dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -75,7 +60,11 @@ const UpdatePost = () => {
             return;
           }
           setPublishError(null);
-          setFormData(data.post);
+
+          setFormData({
+            ...data.post,
+            category: data.post.category.map((cat) => cat._id),
+          });
         }
       };
       if (currentUser) fetchPost();
@@ -191,307 +180,407 @@ const UpdatePost = () => {
     handleSubmit(e);
   };
 
+  console.log(formData);
+
   return (
     <div className="p-3 max-w-3xl mx-auto min-h-screen">
       <h1 className="text-center text-3xl my-7 font-semibold">עדכן פוסט</h1>
-      <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
-        <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <TextInput
-            type="text"
-            placeholder="כותרת"
-            id="title"
-            required
-            className="flex-1"
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                title: e.target.value,
-              })
-            }
-            value={formData.title}
-          />
-          <div className="relative" ref={dropdownRef}>
-            <Button
-              type="button"
-              className="w-full"
-              gradientDuoTone="purpleToPink"
-              size="sm"
-              onClick={() => setDropdownOpen(!dropdownOpen)}>
-              בחר קטגוריות ↓
-            </Button>
-            {dropdownOpen && (
-              <div className="absolute z-10 bg-white dark:border-gray-700 dark:bg-gray-800 border rounded shadow-md p-2 w-full max-h-48 overflow-y-auto">
-                {categories.map((category) => (
-                  <label key={category._id} className="block px-2 py-1">
-                    <input
-                      type="checkbox"
-                      className="ml-2"
-                      value={category._id}
-                      checked={
-                        formData.category?.some(
-                          (selected) => selected._id === category._id
-                        ) || false
-                      } // Check if any selected category matches the current category by ID
-                      onChange={(e) => {
-                        const selectedCategories = formData.category || [];
-                        if (e.target.checked) {
-                          setFormData({
-                            ...formData,
-                            category: [...selectedCategories, category],
-                          });
-                        } else {
-                          setFormData({
-                            ...formData,
-                            category: selectedCategories.filter(
-                              (selected) => selected._id !== category._id
-                            ),
-                          });
-                        }
-                      }}
+
+      {/* If there is no draft version*/}
+      {(currentUser.isAdmin ||
+        !(
+          formData.userId === currentUser._id &&
+          formData.draftVersion &&
+          formData.draftVersion.title
+        )) && (
+        <>
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <div className="flex flex-col gap-4 sm:flex-row justify-between">
+              <TextInput
+                type="text"
+                placeholder="כותרת"
+                id="title"
+                required
+                className="flex-1"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    title: e.target.value,
+                  })
+                }
+                value={formData.title}
+              />
+              <CategorySelect
+                selectedCategories={formData.category}
+                setSelectedCategories={(newCategories) =>
+                  setFormData({ ...formData, category: newCategories })
+                }
+                categories={categories}
+              />
+            </div>
+            <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+              <FileInput
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <Button
+                type="button"
+                gradientDuoTone="purpleToBlue"
+                size="sm"
+                outline
+                onClick={handleUploadImage}
+                disabled={imageUploadProgress}>
+                {imageUploadProgress ? (
+                  <div className="w-16 h-16 ">
+                    <CircularProgressbar
+                      value={imageUploadProgress}
+                      text={`${imageUploadProgress || 0}%`}
                     />
-                    {category.name}
-                  </label>
-                ))}
-              </div>
+                  </div>
+                ) : (
+                  "העלה תמונה"
+                )}
+              </Button>
+            </div>
+            {imageUploadError && (
+              <Alert color="failure">{imageUploadError}</Alert>
             )}
-          </div>
-        </div>
-        <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-          <FileInput
-            type="file"
-            accept="image/*"
-            onChange={(e) => setFile(e.target.files[0])}
-          />
-          <Button
-            type="button"
-            gradientDuoTone="purpleToBlue"
-            size="sm"
-            outline
-            onClick={handleUploadImage}
-            disabled={imageUploadProgress}>
-            {imageUploadProgress ? (
-              <div className="w-16 h-16 ">
-                <CircularProgressbar
-                  value={imageUploadProgress}
-                  text={`${imageUploadProgress || 0}%`}
-                />
-              </div>
-            ) : (
-              "העלה תמונה"
+            {currentUser.isAdmin && (
+              <Select
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    status: e.target.value,
+                  })
+                }
+                value={formData.status}>
+                <option value="pending">ממתין לאישור</option>
+                <option value="published">פורסם</option>
+                <option value="rejected">נדחה</option>
+              </Select>
             )}
-          </Button>
-        </div>
-        {imageUploadError && <Alert color="failure">{imageUploadError}</Alert>}
-        {currentUser.isAdmin && (
-          <Select
-            onChange={(e) =>
-              setFormData({
-                ...formData,
-                status: e.target.value,
-              })
-            }
-            value={formData.status}>
-            <option value="pending">ממתין לאישור</option>
-            <option value="published">פורסם</option>
-            <option value="rejected">נדחה</option>
-          </Select>
-        )}
 
-        {formData.image && (
-          <img
-            src={formData.image}
-            alt="Uploaded image"
-            className="w-full h-72 object-cover"
-          />
-        )}
+            {formData.image && (
+              <img
+                src={formData.image}
+                alt="Uploaded image"
+                className="w-full h-72 object-cover"
+              />
+            )}
 
-        <ReactQuill
-          theme="snow"
-          placeholder="רשום משהו..."
-          className="h-72 mb-12"
-          required
-          formats={[
-            "header",
-            "font",
-            "size",
-            "bold",
-            "italic",
-            "underline",
-            "strike",
-            "blockquote",
-            "list",
-            "bullet",
-            "indent",
-            "link",
-            "image",
-            "video",
-          ]}
-          modules={modules}
-          onChange={(newValue, delta, source) => {
-            if (source === "user") {
-              setFormData({
-                ...formData,
-                content: newValue,
-              });
-            }
-          }}
-          value={formData.content}
-        />
+            <ReactQuill
+              theme="snow"
+              placeholder="רשום משהו..."
+              className="h-72 mb-12"
+              required
+              formats={[
+                "header",
+                "font",
+                "size",
+                "bold",
+                "italic",
+                "underline",
+                "strike",
+                "blockquote",
+                "list",
+                "bullet",
+                "indent",
+                "link",
+                "image",
+                "video",
+              ]}
+              modules={modules}
+              onChange={(newValue, delta, source) => {
+                if (source === "user") {
+                  setFormData({
+                    ...formData,
+                    content: newValue,
+                  });
+                }
+              }}
+              value={formData.content}
+            />
 
-        <Button type="submit" gradientDuoTone="purpleToPink">
-          עדכן פוסט
-        </Button>
-        {publishError && (
-          <Alert color="failure" className="mt-5">
-            {publishError}
-          </Alert>
-        )}
-      </form>
-      {!formData.draftVersion && (
-        <div>
-          <h2 className="text-xl font-bold flex justify-center mt-8">
-            תצוגה מקדימה
-          </h2>
-          <div
-            className="max-w-3xl mx-auto w-full post-content"
-            dangerouslySetInnerHTML={{ __html: formData.content }}></div>
-        </div>
+            <Button type="submit" gradientDuoTone="purpleToPink">
+              עדכן פוסט
+            </Button>
+            {publishError && (
+              <Alert color="failure" className="mt-5">
+                {publishError}
+              </Alert>
+            )}
+          </form>
+          {!formData.draftVersion && (
+            <div>
+              <h2 className="text-xl font-bold flex justify-center mt-8">
+                תצוגה מקדימה
+              </h2>
+              <div
+                className="max-w-3xl mx-auto w-full post-content"
+                dangerouslySetInnerHTML={{ __html: formData.content }}></div>
+            </div>
+          )}
+        </>
       )}
 
       {/* if there is also a draft version show them one after another */}
-      {currentUser.isAdmin && formData.draftVersion && (
-        <form className="flex flex-col gap-4 mt-8">
-          <h1 className="w-full text-center">שינויים חדשים של יוצר הפוסט</h1>
-          <div className="flex flex-col gap-4 sm:flex-row justify-between">
-            <TextInput
-              type="text"
-              placeholder="כותרת"
-              id="title"
-              required
-              className="flex-1"
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  draftVersion: {
-                    ...formData.draftVersion,
-                    title: e.target.value,
-                  },
-                })
-              }
-              value={formData.draftVersion.title}
-            />
-            <Select
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  draftVersion: {
-                    ...formData.draftVersion,
-                    category: e.target.value,
-                  },
-                })
-              }
-              value={formData.draftVersion.category}>
-              <option value="uncategorized">בחר קטגוריה</option>
-              <option value="תשמש">תשמש</option>
-              <option value="מיוחדת">מיוחדת</option>
-              <option value="חוגר">חוגר</option>
-            </Select>
-          </div>
-          <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
-            <FileInput
-              type="file"
-              accept="image/*"
-              onChange={(e) => setFile(e.target.files[0])}
-            />
-            <Button
-              type="button"
-              gradientDuoTone="purpleToBlue"
-              size="sm"
-              outline
-              onClick={() => handleUploadImage("draft")}
-              disabled={imageUploadProgress}>
-              {imageUploadProgress ? (
-                <div className="w-16 h-16 ">
-                  <CircularProgressbar
-                    value={imageUploadProgress}
-                    text={`${imageUploadProgress || 0}%`}
-                  />
-                </div>
-              ) : (
-                "העלה תמונה"
-              )}
-            </Button>
-          </div>
-          {imageUploadError && (
-            <Alert color="failure">{imageUploadError}</Alert>
-          )}
-          {formData.draftVersion.image && (
-            <img
-              src={formData.draftVersion.image}
-              alt="Uploaded image"
-              className="w-full h-72 object-cover"
-            />
-          )}
+      {currentUser.isAdmin &&
+        formData.draftVersion &&
+        formData.draftVersion.title && (
+          <form className="flex flex-col gap-4 mt-8">
+            <h1 className="w-full text-center">שינויים חדשים של יוצר הפוסט</h1>
+            <div className="flex flex-col gap-4 sm:flex-row justify-between">
+              <TextInput
+                type="text"
+                placeholder="כותרת"
+                id="title"
+                required
+                className="flex-1"
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    draftVersion: {
+                      ...formData.draftVersion,
+                      title: e.target.value,
+                    },
+                  })
+                }
+                value={formData.draftVersion.title}
+              />
 
-          <ReactQuill
-            theme="snow"
-            placeholder="רשום משהו..."
-            className="h-72 mb-12"
-            required
-            formats={[
-              "header",
-              "font",
-              "size",
-              "bold",
-              "italic",
-              "underline",
-              "strike",
-              "blockquote",
-              "list",
-              "bullet",
-              "indent",
-              "link",
-              "image",
-              "video",
-            ]}
-            modules={modules}
-            onChange={(newValue, delta, source) => {
-              if (source === "user") {
-                setFormData({
-                  ...formData,
-                  draftVersion: {
-                    ...formData.draftVersion,
-                    content: newValue,
-                  },
-                });
-              }
-            }}
-            value={formData.draftVersion.content}
-          />
-          <div className="flex gap-3">
-            <Button
-              type="button"
-              gradientDuoTone="purpleToPink"
-              className="flex-1"
-              onClick={handleAcceptChanges}>
-              הכנס שינויים
-            </Button>
-            <Button
-              type="button"
-              gradientDuoTone="purpleToPink"
-              outline
-              className="flex-1"
-              onClick={handleDenyChanges}>
-              דחה שינויים
-            </Button>
-          </div>
-          {publishError && (
-            <Alert color="failure" className="mt-5">
-              {publishError}
-            </Alert>
-          )}
-        </form>
-      )}
+              <CategorySelect
+                selectedCategories={formData.draftVersion.category}
+                setSelectedCategories={(newCategories) =>
+                  setFormData({
+                    ...formData,
+                    draftVersion: {
+                      ...formData.draftVersion,
+                      category: newCategories,
+                    },
+                  })
+                }
+                categories={categories}
+              />
+            </div>
+            <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+              <FileInput
+                type="file"
+                accept="image/*"
+                onChange={(e) => setFile(e.target.files[0])}
+              />
+              <Button
+                type="button"
+                gradientDuoTone="purpleToBlue"
+                size="sm"
+                outline
+                onClick={() => handleUploadImage("draft")}
+                disabled={imageUploadProgress}>
+                {imageUploadProgress ? (
+                  <div className="w-16 h-16 ">
+                    <CircularProgressbar
+                      value={imageUploadProgress}
+                      text={`${imageUploadProgress || 0}%`}
+                    />
+                  </div>
+                ) : (
+                  "העלה תמונה"
+                )}
+              </Button>
+            </div>
+            {imageUploadError && (
+              <Alert color="failure">{imageUploadError}</Alert>
+            )}
+            {formData.draftVersion.image && (
+              <img
+                src={formData.draftVersion.image}
+                alt="Uploaded image"
+                className="w-full h-72 object-cover"
+              />
+            )}
+
+            <ReactQuill
+              theme="snow"
+              placeholder="רשום משהו..."
+              className="h-72 mb-12"
+              required
+              formats={[
+                "header",
+                "font",
+                "size",
+                "bold",
+                "italic",
+                "underline",
+                "strike",
+                "blockquote",
+                "list",
+                "bullet",
+                "indent",
+                "link",
+                "image",
+                "video",
+              ]}
+              modules={modules}
+              onChange={(newValue, delta, source) => {
+                if (source === "user") {
+                  setFormData({
+                    ...formData,
+                    draftVersion: {
+                      ...formData.draftVersion,
+                      content: newValue,
+                    },
+                  });
+                }
+              }}
+              value={formData.draftVersion.content}
+            />
+            <div className="flex gap-3">
+              <Button
+                type="button"
+                gradientDuoTone="purpleToPink"
+                className="flex-1"
+                onClick={handleAcceptChanges}>
+                הכנס שינויים
+              </Button>
+              <Button
+                type="button"
+                gradientDuoTone="purpleToPink"
+                outline
+                className="flex-1"
+                onClick={handleDenyChanges}>
+                דחה שינויים
+              </Button>
+            </div>
+            {publishError && (
+              <Alert color="failure" className="mt-5">
+                {publishError}
+              </Alert>
+            )}
+          </form>
+        )}
+
+      {/* If there is also a draft version and user is the creator of the post */}
+      {!currentUser.isAdmin &&
+        formData.draftVersion &&
+        formData.draftVersion.title &&
+        formData.userId === currentUser._id && (
+          <>
+            <form className="flex flex-col gap-4 mt-8" onSubmit={handleSubmit}>
+              <h1 className="w-full text-center">שינויים חדשים שלי</h1>
+              <div className="flex flex-col gap-4 sm:flex-row justify-between">
+                <TextInput
+                  type="text"
+                  placeholder="כותרת"
+                  id="title"
+                  required
+                  className="flex-1"
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      draftVersion: {
+                        ...formData.draftVersion,
+                        title: e.target.value,
+                      },
+                    })
+                  }
+                  value={formData.draftVersion.title}
+                />
+                <CategorySelect
+                  selectedCategories={formData.draftVersion.category}
+                  setSelectedCategories={(newCategories) =>
+                    setFormData({
+                      ...formData,
+                      draftVersion: {
+                        ...formData.draftVersion,
+                        category: newCategories,
+                      },
+                    })
+                  }
+                  categories={categories}
+                />
+              </div>
+              <div className="flex gap-4 items-center justify-between border-4 border-teal-500 border-dotted p-3">
+                <FileInput
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => setFile(e.target.files[0])}
+                />
+                <Button
+                  type="button"
+                  gradientDuoTone="purpleToBlue"
+                  size="sm"
+                  outline
+                  onClick={() => handleUploadImage("draft")}
+                  disabled={imageUploadProgress}>
+                  {imageUploadProgress ? (
+                    <div className="w-16 h-16 ">
+                      <CircularProgressbar
+                        value={imageUploadProgress}
+                        text={`${imageUploadProgress || 0}%`}
+                      />
+                    </div>
+                  ) : (
+                    "העלה תמונה"
+                  )}
+                </Button>
+              </div>
+              {imageUploadError && (
+                <Alert color="failure">{imageUploadError}</Alert>
+              )}
+              {formData.draftVersion.image && (
+                <img
+                  src={formData.draftVersion.image}
+                  alt="Uploaded image"
+                  className="w-full h-72 object-cover"
+                />
+              )}
+
+              <ReactQuill
+                theme="snow"
+                placeholder="רשום משהו..."
+                className="h-72 mb-12"
+                required
+                formats={[
+                  "header",
+                  "font",
+                  "size",
+                  "bold",
+                  "italic",
+                  "underline",
+                  "strike",
+                  "blockquote",
+                  "list",
+                  "bullet",
+                  "indent",
+                  "link",
+                  "image",
+                  "video",
+                ]}
+                modules={modules}
+                onChange={(newValue, delta, source) => {
+                  if (source === "user") {
+                    setFormData({
+                      ...formData,
+                      draftVersion: {
+                        ...formData.draftVersion,
+                        content: newValue,
+                      },
+                    });
+                  }
+                }}
+                value={formData.draftVersion.content}
+              />
+              <Button type="submit" gradientDuoTone="purpleToPink">
+                עדכן פוסט
+              </Button>
+              {publishError && (
+                <Alert color="failure" className="mt-5">
+                  {publishError}
+                </Alert>
+              )}
+            </form>
+          </>
+        )}
     </div>
   );
 };

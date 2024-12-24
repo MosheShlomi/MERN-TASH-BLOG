@@ -52,6 +52,11 @@ body {
   margin-bottom: 0.5rem;
 }
 
+.post-content ol,
+.post-content ul {
+  margin-right: 2rem;
+}
+
 .post-content code {
   background-color: #ececec;
   padding: 0.25rem;
@@ -77,16 +82,19 @@ body {
   border-top-left-radius: 0.5rem;
   border-top-right-radius: 0% !important;
 }
+
 .group\/head:first-child .group-first\/head\:first\:rounded-tl-lg:first-child {
   border-top-right-radius: 0.5rem;
   border-top-left-radius: 0% !important;
 }
+
 .group\/body:last-child
   .group\/row:last-child
   .group-last\/body\:group-last\/row\:last\:rounded-br-lg:last-child {
   border-bottom-left-radius: 0.5rem;
   border-bottom-right-radius: 0% !important;
 }
+
 .group\/body:last-child
   .group\/row:last-child
   .group-last\/body\:group-last\/row\:first\:rounded-bl-lg:first-child {
@@ -101,11 +109,22 @@ body {
   text-align: right;
 }
 
+.ql-editor ol,
+.ql-editor ul {
+  padding-right: 1.5em;
+}
+
+.ql-editor li:not(.ql-direction-rtl)::before {
+  margin-right: -1.5em;
+  margin-left: 0.3em;
+  text-align: right;
+}
+
 .ql-snow .ql-picker {
   direction: ltr;
 }
 
-.dark .ql-container {
+*/ .dark .ql-container {
   background-color: #1f2937;
   color: #e5e7eb;
   border-color: #4b5563;
@@ -117,25 +136,61 @@ body {
 }
 
 .dark .ql-toolbar .ql-picker {
-  color: #e5e7eb; /* Toolbar dropdown text */
+  color: #e5e7eb;
+  /* Toolbar dropdown text */
 }
 
 .dark .ql-editor {
-  color: #e5e7eb; /* Editor text color */
+  color: #e5e7eb;
+  /* Editor text color */
 }
 
 .dark .ql-blank::before {
-  color: #ffffff; /* Placeholder color */
+  color: #ffffff;
+  /* Placeholder color */
 }
 
 .dark .ql-snow .ql-stroke {
-  stroke: #e5e7eb; /* Icons stroke color */
+  stroke: #e5e7eb;
+  /* Icons stroke color */
 }
 
 .dark .ql-snow .ql-fill {
-  fill: #e5e7eb; /* Icons fill color */
+  fill: #e5e7eb;
+  /* Icons fill color */
 }
 
 .dark .ql-picker-options {
   background-color: #374151;
+}
+
+/* Scrollbar styling */
+.dark ::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(212, 212, 212, 0.3);
+  background-color: #000000;
+}
+
+.dark ::-webkit-scrollbar {
+  width: 6px;
+  background-color: rgb(39, 39, 39);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background-color: rgb(89, 89, 89);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgb(255, 255, 255);
+  background-color: #6d6969;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background-color: rgb(211, 211, 211);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgb(193, 193, 193);
+  border-radius: 5px;
 }

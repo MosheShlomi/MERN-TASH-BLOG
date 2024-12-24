@@ -20,6 +20,18 @@ function PostPreviewPage() {
   const [postUser, setPostUser] = useState({});
   const navigate = useNavigate();
 
+  const hebrewNames = {
+    pending: "ממתין לאישור",
+    published: "פורסם",
+    rejected: "נדחה",
+  };
+
+  const statusColors = {
+    pending: "text-yellow-600 dark:text-yellow-400",
+    published: "text-green-600 dark:text-green-400",
+    rejected: "text-red-600 dark:text-red-400",
+  };
+
   useEffect(() => {
     const fetchPost = async () => {
       try {
@@ -144,12 +156,13 @@ function PostPreviewPage() {
         {post && post.title}
       </h1>
 
-      <div className="flex gap-2 flex-wrap justify-center">
+      <div className="flex gap-2 flex-wrap justify-center items-center">
         {post.category &&
           post.category.map((cat) => (
             <Link
               to={`/search?category=${cat.name}`}
-              className="self-center mt-2">
+              key={cat._id}
+              className="self-center">
               <Button color="gray" pill size="xs">
                 {cat.name}
               </Button>
@@ -157,10 +170,16 @@ function PostPreviewPage() {
           ))}
       </div>
 
+      <div className="flex justify-center py-2">
+        <span className={statusColors[post.status]}>
+          סטטוס: {hebrewNames[post.status]}
+        </span>
+      </div>
+
       <img
         src={post && post.image}
         alt={post && post.title}
-        className="mt-5 p-3 max-h-[600px] w-full max-w-2xl mx-auto object-cover"
+        className="p-3 max-h-[600px] w-full max-w-2xl mx-auto object-cover"
       />
 
       <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">

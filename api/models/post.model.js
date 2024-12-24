@@ -50,7 +50,10 @@ const postSchema = new mongoose.Schema({
         content: { type: String },
         title: { type: String },
         image: { type: String },
-        category: { type: String },
+        category: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Category',
+        }],
         slug: { type: String },
     },
     updateStatus: {

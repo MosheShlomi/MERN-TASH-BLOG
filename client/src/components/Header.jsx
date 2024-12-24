@@ -141,11 +141,14 @@ const Header = () => {
             עמוד הבית
           </Link>
         </Navbar.Link>
+        <Navbar.Link active={path === "/search"} as={"div"}>
+          <Link to="/search">פוסטים</Link>
+        </Navbar.Link>
         <Navbar.Link active={path === "/about"} as={"div"}>
           <Link to="/about">נעים להכיר</Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/projects"} as={"div"}>
-          <Link to="/projects">קישורים</Link>
+        <Navbar.Link active={path === "/contact"} as={"div"}>
+          <Link to="/contact">צור קשר</Link>
         </Navbar.Link>
       </Navbar.Collapse>
     </Navbar>

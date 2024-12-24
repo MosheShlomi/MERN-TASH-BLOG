@@ -111,6 +111,10 @@ const Header = () => {
               <Dropdown.Item>פרופיל</Dropdown.Item>
             </Link>
             <Dropdown.Divider />
+            <Link to={"/dashboard?tab=posts"}>
+              <Dropdown.Item>פוסטים שלי</Dropdown.Item>
+            </Link>
+            <Dropdown.Divider />
             <span className="inline sm:hidden">
               <Dropdown.Item
                 onClick={() => dispatch(toogleTheme())}

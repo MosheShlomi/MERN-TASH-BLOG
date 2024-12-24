@@ -23,6 +23,21 @@ function DashPosts() {
     rejected: "text-red-600 dark:text-red-400",
   };
 
+  const updateStatusMessages = {
+    accepted: {
+      color: "text-green-600 dark:text-green-400",
+      message: "בקשה לעדכון אושרה",
+    },
+    rejected: {
+      color: "text-red-600 dark:text-red-400",
+      message: "בקשה לעדכון נידחתה",
+    },
+    pending: {
+      color: "text-yellow-600 dark:text-yellow-400",
+      message: "בקשה לעדכון נשלחה",
+    },
+  };
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -80,6 +95,16 @@ function DashPosts() {
 
   return (
     <div className="table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
+      <div className="md:w-56 pb-3">
+        <Link to="/create-post">
+          <Button
+            gradientDuoTone="purpleToPink"
+            type="button"
+            className="w-full">
+            פוסט חדש
+          </Button>
+        </Link>
+      </div>
       {userPosts.length > 0 ? (
         <>
           <Table hoverable className="shadow-md text-right">
@@ -133,21 +158,13 @@ function DashPosts() {
                     </span>
                     <br />
                     {!currentUser.isAdmin &&
-                      post.updateStatus === "accepted" && (
-                        <span className="text-xs border-t border-gray-300 text-green-600 dark:border-gray-700 dark:text-green-400 p-1 block">
-                          בקשה לעדכון אושרה
-                        </span>
-                      )}
-                    {!currentUser.isAdmin &&
-                      post.updateStatus === "rejected" && (
-                        <span className="text-xs border-t border-gray-300 text-red-600 dark:border-gray-700 dark:text-red-400 p-1 block">
-                          בקשה לעדכון נידחתה
-                        </span>
-                      )}
-                    {!currentUser.isAdmin &&
-                      post.updateStatus === "pending" && (
-                        <span className="text-xs border-t border-gray-300 text-yellow-600 dark:border-gray-700 dark:text-yellow-400 p-1 block">
-                          בקשה לעדכון נשלחה
+                      post.updateStatus &&
+                      post.updateStatus !== "no-update" && (
+                        <span
+                          className={`text-xs border-t border-gray-300 dark:border-gray-700 p-1 block ${
+                            updateStatusMessages[post.updateStatus]?.color
+                          }`}>
+                          {updateStatusMessages[post.updateStatus]?.message}
                         </span>
                       )}
                   </Table.Cell>

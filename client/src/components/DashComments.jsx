@@ -10,19 +10,25 @@ function DashComments() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [commentIdToDelete, setCommentIdToDelete] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchComments = async () => {
       try {
+        setLoading(true);
         const res = await fetch(`/api/comment/get-comments`);
         const data = await res.json();
         if (res.ok) {
           setComments(data.comments);
+          setLoading(false);
           if (data.comments.length < 9) {
             setShowMore(false);
           }
+        } else {
+          setLoading(false);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error.message);
       }
     };
@@ -72,7 +78,12 @@ function DashComments() {
 
   return (
     <div className="table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {currentUser.isAdmin && comments.length > 0 ? (
+      {!loading && comments.length === 0 && (
+        <p className="text-xl text-gray-500">אין לך עדיין תגובות!</p>
+      )}
+      {loading && <p className="text-xl text-gray-500">טוען...</p>}
+
+      {!loading && currentUser.isAdmin && comments.length > 0 && (
         <>
           <Table hoverable className="shadow-md text-right">
             <Table.Head>
@@ -119,8 +130,6 @@ function DashComments() {
             </button>
           )}
         </>
-      ) : (
-        <p>אין לך עדיין תגובות!</p>
       )}
       <Modal
         show={showModal}

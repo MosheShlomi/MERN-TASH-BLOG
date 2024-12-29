@@ -33,7 +33,7 @@ const CategorySelect = ({
         בחר קטגוריות ↓
       </Button>
       {dropdownOpen && (
-        <div className="absolute z-10 bg-white dark:border-gray-700 dark:bg-gray-800 border rounded shadow-md p-2 w-full max-h-48 overflow-y-auto">
+        <div className="absolute z-10 bg-stone-50 dark:border-gray-700 dark:bg-gray-800 border rounded shadow-md p-2 w-full max-h-48 overflow-y-auto">
           {categories.map((category) => (
             <label key={category._id} className="block px-2 py-1 border-b border-gray-600">
               <input

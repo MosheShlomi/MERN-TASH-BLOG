@@ -10,6 +10,7 @@ function DashPosts() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postIdToDelete, setPostIdToDelete] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const hebrewNames = {
     pending: "ממתין לאישור",
@@ -40,17 +41,22 @@ function DashPosts() {
 
   useEffect(() => {
     const fetchPosts = async () => {
+      setLoading(true);
       try {
         const res = await fetch(`/api/post/get-dash-posts`);
         const data = await res.json();
         if (res.ok) {
           setUserPosts(data.posts);
+          setLoading(false);
           if (data.posts.length < 9) {
             setShowMore(false);
           }
+        } else {
+          setLoading(false);
         }
       } catch (error) {
         console.log(error.message);
+        setLoading(false);
       }
     };
     fetchPosts();
@@ -105,7 +111,11 @@ function DashPosts() {
           </Button>
         </Link>
       </div>
-      {userPosts.length > 0 ? (
+      {!loading && userPosts.length === 0 && (
+        <p className="text-xl text-gray-500">אין לך עדיין פוסטים!</p>
+      )}
+      {loading && <p className="text-xl text-gray-500">טוען...</p>}
+      {!loading && userPosts && userPosts.length > 0 && (
         <>
           <Table hoverable className="shadow-md text-right">
             <Table.Head>
@@ -199,8 +209,6 @@ function DashPosts() {
             </button>
           )}
         </>
-      ) : (
-        <p>אין לך עדיין פוסטים!</p>
       )}
       <Modal
         show={showModal}

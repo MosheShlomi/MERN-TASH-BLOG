@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import CallToAction from "../components/CallToAction";
 import PostCard from "../components/PostCard";
+import { Button } from "flowbite-react";
 
 const Home = () => {
   const [posts, setPosts] = useState([]);
@@ -23,27 +24,28 @@ const Home = () => {
 
   return (
     <div>
-      <div className="flex flex-col gap-6 p-28 px-3 max-w-6xl mx-auto justify-center text-center">
-        <h1 className="text-3xl font-bold lg:text-6xl ">
+      <div className="flex flex-col items-center gap-8 p-8 lg:p-16 bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
+        <h1 className="text-3xl lg:text-6xl font-bold tracking-tight text-center">
           ברוכים הבאים לבלוג זכויות החיילים
         </h1>
-        <p className="lg:px-40">
+
+        <p className="text-md lg:text-lg text-center max-w-4xl leading-relaxed">
           הבלוג נוצר במטרה לספק מידע ברור וקצר על הזכויות המגיעות לכל חייל
           וחיילת. כאן תוכלו למצוא מדריכים, כלים, וטיפים שיעזרו לכם להבין את
-          זכויותיכם ולקבל את המגיע לכם. זכרו - ידע הוא כוח, ואנחנו כאן כדי לתמוך
-          בכם בכל שלב!
-          <br />
-          <span className="text-red-400 text-xs sm:text-sm">
+          זכויותיכם ולקבל את המגיע לכם.
+          <br className="hidden lg:block" />
+          זכרו - ידע הוא כוח, ואנחנו כאן כדי לתמוך בכם בכל שלב!
+          <span className="block mt-4 text-sm lg:text-md text-red-400">
             שימו לב: שכל המידע בבלוג הוא בגדר המלצה בלבד, ואנו לא אחראים לתוכן
             המופיע בו. יש לוודא את המידע המעודכן מול משרד ת"ש.
           </span>
         </p>
-        <Link
-          to="/search"
-          className="text-sm sm:text-md text-teal-500 font-bold hover:underline">
-          לצפיה בכל הפוסטים
-        </Link>
+
+        <Button gradientDuoTone="greenToBlue" size="lg">
+          <Link to="/search">לצפיה בכל הפוסטים</Link>
+        </Button>
       </div>
+
       <div className="p-3 bg-amber-100 dark:bg-slate-700 max-w-6xl mx-auto rounded">
         <CallToAction />
       </div>
@@ -59,11 +61,12 @@ const Home = () => {
                 <PostCard key={post._id} post={post} />
               ))}
             </div>
-            <Link
-              to="/search"
-              className="text-lg text-teal-500 hover:underline text-center">
-              לצפיה בכל הפוסטים
-            </Link>
+
+            <div className="flex justify-center ">
+              <Button gradientDuoTone="greenToBlue" size="md">
+                <Link to="/search">לצפיה בכל הפוסטים</Link>
+              </Button>
+            </div>
           </div>
         )}
       </div>

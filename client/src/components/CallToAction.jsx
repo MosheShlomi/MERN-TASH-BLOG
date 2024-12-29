@@ -27,7 +27,7 @@ function CallToAction() {
       <div className="p-7 flex-1 flex justify-center">
         <img
           src={donateImg}
-          className="h-[260px] object-fit bg-white rounded px-5"
+          className="h-[260px] object-fit !bg-white rounded px-5"
         />
       </div>
     </div>

@@ -10,6 +10,7 @@ function DashDrafts() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const hebrewNames = {
     pending: "ממתין לאישור",
@@ -26,17 +27,21 @@ function DashDrafts() {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        setLoading(true);
         const res = await fetch(`/api/post/get-draft-posts`);
         const data = await res.json();
         if (res.ok) {
           setDraftPosts(data.posts);
-
+          setLoading(false);
           if (data.posts.length < 9) {
             setShowMore(false);
           }
+        } else {
+          setLoading(false);
         }
       } catch (error) {
         console.log(error.message);
+        setLoading(false);
       }
     };
     if (currentUser) {
@@ -113,7 +118,12 @@ function DashDrafts() {
 
   return (
     <div className=" table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {currentUser.isAdmin && draftPosts.length > 0 ? (
+      {!loading && draftPosts.length === 0 && (
+        <p className="text-xl text-gray-500">אין לך עדיין פוסטים!</p>
+      )}
+      {loading && <p className="text-xl text-gray-500">טוען...</p>}
+
+      {!loading && currentUser.isAdmin && draftPosts.length > 0 && (
         <>
           <Table hoverable className="shadow-md text-right">
             <Table.Head>
@@ -249,8 +259,6 @@ function DashDrafts() {
             </button>
           )}
         </>
-      ) : (
-        <p>אין לך עדיין פוסטים!</p>
       )}
       <Modal
         show={showModal}

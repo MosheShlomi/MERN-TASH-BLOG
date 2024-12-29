@@ -190,3 +190,9 @@ body {
   background-color: rgb(193, 193, 193);
   border-radius: 5px;
 }
+
+:is([dir=rtl]) select:not([size]) {
+  background-position: left 0.25rem center;
+  padding-right: 0.75rem;
+  padding-left: 1.25rem;
+}

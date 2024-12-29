@@ -10,19 +10,25 @@ function DashUsers() {
   const [showMore, setShowMore] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [userIdToDelete, setUserIdToDelete] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true);
         const res = await fetch(`/api/user/get-users`);
         const data = await res.json();
         if (res.ok) {
           setUsers(data.users);
+          setLoading(false);
           if (data.users.length < 9) {
             setShowMore(false);
           }
+        } else {
+          setLoading(false);
         }
       } catch (error) {
+        setLoading(false);
         console.log(error.message);
       }
     };
@@ -65,7 +71,12 @@ function DashUsers() {
 
   return (
     <div className="table-auto w-full text-center overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500">
-      {currentUser.isAdmin && users.length > 0 ? (
+      {!loading && users.length === 0 && (
+        <p className="text-xl text-gray-500">אין לך עדיין משתמשים!</p>
+      )}
+      {loading && <p className="text-xl text-gray-500">טוען...</p>}
+
+      {!loading && currentUser.isAdmin && users.length > 0 && (
         <>
           <Table hoverable className="shadow-md text-right">
             <Table.Head>
@@ -128,8 +139,6 @@ function DashUsers() {
             </button>
           )}
         </>
-      ) : (
-        <p>אין לך עדיין משתמשים!</p>
       )}
       <Modal
         show={showModal}

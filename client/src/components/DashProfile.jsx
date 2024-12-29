@@ -241,16 +241,8 @@ const DashProfile = () => {
           type="submit"
           outline
           disabled={loading || imageFileUploading}>
-          {loading ? "טוען..." : "עדכן"}
+          {loading ? "טוען..." : "עדכן פרופיל"}
         </Button>
-        <Link to="/create-post">
-          <Button
-            gradientDuoTone="purpleToPink"
-            type="button"
-            className="w-full">
-            צור פוסט
-          </Button>
-        </Link>
       </form>
 
       <div className="text-red-500 flex justify-between mt-5">

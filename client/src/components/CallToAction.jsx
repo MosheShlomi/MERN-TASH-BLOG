@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Table, Button } from "flowbite-react";
-import donateImg from "../assets/images/donate-qr-cafe.svg";
+import donateImg from "../assets/images/donate-qr.png";
 
 function CallToAction() {
   return (
@@ -13,22 +13,29 @@ function CallToAction() {
           כגדולה, תסייע לנו להמשיך את הפעילות ולתמוך בחיילים נוספים.
         </p>
         <p className="my-3">תודה רבה על התמיכה!</p>
-        <Button
-          gradientDuoTone="redToYellow"
-          className="rounded-tl-xl rounded-bl-none">
-          <a
-            href="https://www.bitpay.co.il/app/me/43112273-B5AA-2FFC-4166-E1595CD325268000"
-            target="_blank"
-            rel="noopener noreferrer">
+        <a
+          className="w-full"
+          href="https://www.bitpay.co.il/app/me/43112273-B5AA-2FFC-4166-E1595CD325268000"
+          target="_blank"
+          rel="noopener noreferrer">
+          <Button
+            gradientDuoTone="redToYellow"
+            className="rounded-tl-xl rounded-bl-none w-full">
             לתרומה
-          </a>
-        </Button>
+          </Button>
+        </a>
       </div>
-      <div className="p-7 flex-1 flex justify-center">
-        <img
-          src={donateImg}
-          className="h-[260px] object-fit !bg-white rounded px-5"
-        />
+      <div className="p-7 flex-1 flex justify-center items-center">
+        <a
+          className=""
+          href="https://www.bitpay.co.il/app/me/43112273-B5AA-2FFC-4166-E1595CD325268000"
+          target="_blank"
+          rel="noopener noreferrer">
+          <img
+            src={donateImg}
+            className="h-[260px] object-fit !bg-white rounded px-5"
+          />
+        </a>
       </div>
     </div>
   );

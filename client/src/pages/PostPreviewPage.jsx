@@ -180,6 +180,12 @@ function PostPreviewPage() {
         src={post && post.image}
         alt={post && post.title}
         className="p-3 max-h-[600px] w-full max-w-2xl mx-auto object-cover"
+        loading="lazy"
+        style={{
+          background: `url("/src/assets/images/default-img.jpg")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       />
 
       <div className="flex justify-between p-3 border-b border-slate-500 mx-auto w-full max-w-2xl text-xs">

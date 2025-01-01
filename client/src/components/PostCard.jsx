@@ -10,6 +10,12 @@ function PostCard({ post }) {
           src={post.image}
           alt="post cover"
           className="h-[260px] w-full object-cover group-hover:h-[200px] transition-all duration-300 z-20"
+          loading="lazy"
+          style={{
+            background: `url("/src/assets/images/default-img.jpeg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
         />
       </Link>
       <div className="p-3 flex flex-col gap-2">
@@ -20,7 +26,7 @@ function PostCard({ post }) {
             {post.category.map((cat) => cat.name).join(", ")}
           </span>
         )}
-        
+
         <span className="text-sm flex justify-between flex-row-reverse">
           {new Date(post.updatedAt).toLocaleDateString("he-IL", {
             day: "2-digit",

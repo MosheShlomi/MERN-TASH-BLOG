@@ -22,7 +22,7 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tash-blog.com/search</loc>
+    <loc>https://tash-blog.com/posts</loc>
     <priority>0.7</priority>
   </url>
 </urlset>

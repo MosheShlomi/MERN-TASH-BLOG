@@ -4,7 +4,7 @@ import { FaHeart } from "react-icons/fa";
 
 function PostCard({ post }) {
   return (
-    <div className="group relative w-full border border-teal-500 hover:border-2 transition-all h-[400px] overflow-hidden rounded-lg sm:w-[430px]">
+    <div className="group relative w-full border border-teal-500 hover:border-2 transition-all sm:h-[380px] h-[400px] overflow-hidden rounded-lg sm:w-[370px]">
       <Link to={`/post/${post.slug}`}>
         <img
           src={post.image}
@@ -19,7 +19,7 @@ function PostCard({ post }) {
         />
       </Link>
       <div className="p-3 flex flex-col gap-2">
-        <p className="text-lg font-semibold line-clamp-2">{post.title}</p>
+        <p className="text-lg font-semibold line-clamp-1 ">{post.title}</p>
 
         {post.category && (
           <span className="italic text-sm">

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PostCard from "../components/PostCard";
 
-function Search() {
+function Posts() {
   const [sideBarData, setSideBarData] = useState({
     searchTerm: "",
     sort: "desc",
@@ -100,7 +100,7 @@ function Search() {
     urlParams.set("sort", sideBarData.sort);
     urlParams.set("category", sideBarData.category);
     const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    navigate(`/posts?${searchQuery}`);
   };
 
   const handleShowMore = async () => {
@@ -213,4 +213,4 @@ function Search() {
   );
 }
 
-export default Search;
+export default Posts;

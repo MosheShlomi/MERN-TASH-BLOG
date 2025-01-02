@@ -45,7 +45,7 @@ const Header = () => {
     const urlParams = new URLSearchParams(location.search);
     urlParams.set("searchTerm", searchTerm);
     const searchQuery = urlParams.toString();
-    navigate(`/search?${searchQuery}`);
+    navigate(`/posts?${searchQuery}`);
   };
 
   return (
@@ -73,7 +73,7 @@ const Header = () => {
         className="w-12 h-10 lg:hidden"
         color="gray"
         pill
-        onClick={() => navigate("/search")}>
+        onClick={() => navigate("/posts")}>
         <AiOutlineSearch />
       </Button>
 
@@ -141,8 +141,8 @@ const Header = () => {
             עמוד הבית
           </Link>
         </Navbar.Link>
-        <Navbar.Link active={path === "/search"} as={"div"}>
-          <Link to="/search">פוסטים</Link>
+        <Navbar.Link active={path === "/posts"} as={"div"}>
+          <Link to="/posts">פוסטים</Link>
         </Navbar.Link>
         <Navbar.Link active={path === "/about"} as={"div"}>
           <Link to="/about">נעים להכיר</Link>

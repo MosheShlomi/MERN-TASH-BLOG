@@ -1,62 +1,8 @@
-import { useState } from "react";
 import { Alert, TextInput, Textarea, Button } from "flowbite-react";
+import { useForm, ValidationError } from "@formspree/react";
 
 const Contact = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    subject: "",
-    message: "",
-  });
-
-  const [updateUserSuccess, setUpdateUserSuccess] = useState("");
-  const [updateUserError, setUpdateUserError] = useState("");
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const response = await fetch("/api/contact", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    const result = await response.json();
-
-    if (response.ok) {
-      setUpdateUserSuccess("ההודעה נשלחה בהצלחה!");
-      setUpdateUserError("");
-      setFormData({ email: "", subject: "", message: "" });
-    } else {
-      setUpdateUserError("הייתה שגיאה בשליחת ההודעה, אנא נסה שוב.");
-      setUpdateUserSuccess("");
-    }
-  };
-
-  const handleSimpleSubmit = (e) => {
-    e.preventDefault();
-
-    // Create the mailto URL with query parameters
-    const mailtoLink = `mailto:tashblog7@gmail.com?subject=${encodeURIComponent(
-      formData.subject
-    )}&body=${encodeURIComponent(
-      formData.message
-    )}%0A%0AFrom: ${encodeURIComponent(formData.email)}`;
-
-    // Open the user's email client with the pre-filled data
-    window.location.href = mailtoLink;
-
-    setFormData({ email: "", subject: "", message: "" });
-  };
+  const [state, handleSubmit] = useForm(import.meta.env.VITE_FORMSPREE_ID);
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10">
@@ -69,67 +15,88 @@ const Contact = () => {
           ממך!
         </p>
 
-        {updateUserSuccess && (
+        {state.succeeded && (
           <Alert color="success" className="mt-5">
-            {updateUserSuccess}
+            ההודעה נשלחה בהצלחה! תודה שפנית אלינו.
           </Alert>
         )}
 
-        {updateUserError && (
-          <Alert color="failure" className="mt-5">
-            {updateUserError}
-          </Alert>
+        {!state.succeeded && (
+          <form className="space-y-3" onSubmit={handleSubmit}>
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-800 dark:text-white pb-2">
+                אימייל
+              </label>
+              <TextInput
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="כתובת אימייל"
+                className="w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+              />
+              <ValidationError
+                prefix="Email"
+                field="email"
+                errors={state.errors}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="subject"
+                className="block text-sm font-medium text-gray-800 dark:text-white pb-2">
+                נושא
+              </label>
+              <TextInput
+                type="text"
+                id="subject"
+                name="subject"
+                required
+                placeholder="נושא ההודעה"
+                className="w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+              />
+              <ValidationError
+                prefix="Subject"
+                field="subject"
+                errors={state.errors}
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="message"
+                className="block text-sm font-medium text-gray-800 dark:text-white pb-2">
+                הודעה
+              </label>
+              <Textarea
+                id="message"
+                name="message"
+                rows={5}
+                required
+                placeholder="כתוב לנו"
+                className="w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+              />
+              <ValidationError
+                prefix="Message"
+                field="message"
+                errors={state.errors}
+              />
+            </div>
+
+            <div className="flex justify-center">
+              <Button
+                gradientDuoTone="greenToBlue"
+                type="submit"
+                className="w-full max-w-xs mt-2"
+                disabled={state.submitting}>
+                שלח הודעה
+              </Button>
+            </div>
+          </form>
         )}
-
-        <form className="space-y-6" onSubmit={handleSimpleSubmit}>
-          <div>
-            <TextInput
-              type="email"
-              placeholder="כתובת אימייל"
-              label="אימייל"
-              required
-              name="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              className="w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-
-          <div>
-            <TextInput
-              type="text"
-              placeholder="נושא ההודעה"
-              label="נושא"
-              required
-              name="subject"
-              value={formData.subject}
-              onChange={handleInputChange}
-              className="w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-
-          <div>
-            <Textarea
-              placeholder="הודעה"
-              label="כתוב לנו"
-              rows={5}
-              required
-              name="message"
-              value={formData.message}
-              onChange={handleInputChange}
-              className="w-full dark:bg-gray-800 dark:border-gray-600 dark:text-white"
-            />
-          </div>
-
-          <div className="flex justify-center">
-            <Button
-              gradientDuoTone="greenToBlue"
-              type="submit"
-              className="w-full max-w-xs">
-              שלח הודעה
-            </Button>
-          </div>
-        </form>
 
         <div className="mt-12 text-center">
           <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">

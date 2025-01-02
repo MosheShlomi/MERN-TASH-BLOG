@@ -13,7 +13,7 @@ import CreatePost from "./pages/CreatePost";
 import UpdatePost from "./pages/UpdatePost";
 import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
-import Search from "./pages/Search";
+import Posts from "./pages/Posts";
 import PostPreviewPage from "./pages/PostPreviewPage";
 
 const App = () => {
@@ -34,7 +34,7 @@ const App = () => {
         <Route path="/sign-in" element={<SignIn />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/post/:postSlug" element={<PostPage />} />
-        <Route path="/search" element={<Search />} />
+        <Route path="/posts" element={<Posts />} />
       </Routes>
       <Footer />
     </BrowserRouter>

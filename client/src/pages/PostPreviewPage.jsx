@@ -160,7 +160,7 @@ function PostPreviewPage() {
         {post.category &&
           post.category.map((cat) => (
             <Link
-              to={`/search?category=${cat.name}`}
+              to={`/posts?category=${cat.name}`}
               key={cat._id}
               className="self-center">
               <Button color="gray" pill size="xs">

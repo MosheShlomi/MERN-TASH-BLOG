@@ -146,7 +146,7 @@ function PostPage() {
         {post.category &&
           post.category.map((cat) => (
             <Link
-              to={`/search?category=${cat.name}`}
+              to={`/posts?category=${cat.name}`}
               className="self-center mt-2">
               <Button color="gray" pill size="xs">
                 {cat.name}

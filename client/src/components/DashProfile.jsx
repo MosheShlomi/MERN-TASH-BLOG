@@ -280,9 +280,6 @@ const DashProfile = () => {
             disabled={sitemapUpdated}>
             {!sitemapUpdated ? " עדכן את ה-SITEMAP" : "ה-SITEMAP עודכן"}
           </Button>
-          {/* <span className="cursor-pointer">
-            {!sitemapUpdated ? " עדכן את הSITEMAP" : "הSITEMAP עודכן"}
-          </span> */}
         </div>
       )}
       {updateUserSuccess && (

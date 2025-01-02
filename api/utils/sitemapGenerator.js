@@ -21,7 +21,7 @@ export const generateSitemap = async () => {
         // Dynamic pages for posts
         const dynamicPages = posts.map(post => ({
             loc: `/post/${post.slug}`,
-            lastmod: post.updatedAt,
+            lastmod: post.updatedAt ? post.updatedAt.toISOString().slice(0, 10) : undefined,
             priority: 0.6,
         }));
 

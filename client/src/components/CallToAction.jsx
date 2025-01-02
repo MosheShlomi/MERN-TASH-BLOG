@@ -30,13 +30,19 @@ function CallToAction() {
       </div>
       <div className="p-7 flex-1 flex justify-center items-center">
         <a
-          className=""
+          className="w-full"
           href="https://www.bitpay.co.il/app/me/43112273-B5AA-2FFC-4166-E1595CD325268000"
           target="_blank"
           rel="noopener noreferrer">
           <img
             src={donateImg}
-            className="h-[260px] object-fit !bg-white rounded px-5"
+            className="h-[260px] object-fit !bg-white rounded"
+            loading="lazy"
+            style={{
+              background: `url("/src/assets/images/default-img.jpeg")`,
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
           />
         </a>
       </div>

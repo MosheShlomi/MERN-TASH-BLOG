@@ -21,7 +21,6 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { HiOutlineExclamationCircle } from "react-icons/hi";
-import { Link } from "react-router-dom";
 
 const DashProfile = () => {
   const { currentUser, error, loading } = useSelector((state) => state.user);
@@ -34,6 +33,7 @@ const DashProfile = () => {
   const [updateUserError, setUpdateUserError] = useState(null);
   const [formData, setFormData] = useState({});
   const [showModal, setShowModal] = useState(false);
+  const [sitemapUpdated, setSitemapUpdated] = useState(false);
 
   const filePickerRef = useRef();
   const dispatch = useDispatch();
@@ -160,6 +160,23 @@ const DashProfile = () => {
     }
   };
 
+  const generateSitemap = async () => {
+    setSitemapUpdated(false);
+    try {
+      const res = await fetch("api/generate-sitemap", {
+        method: "GET",
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        console.log(data.message);
+      } else {
+        setSitemapUpdated(true);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
     <div className="max-w-lg mx-auto p-3 w-full">
       <h1 className="my-7 text-center font-semibold text-3xl">פרופיל</h1>
@@ -253,6 +270,21 @@ const DashProfile = () => {
           יציאה
         </span>
       </div>
+      {currentUser.isAdmin && (
+        <div className="w-full flex justify-center my-2">
+          <Button
+            onClick={generateSitemap}
+            gradientDuoTone="purpleToBlue"
+            type="button"
+            outline
+            disabled={sitemapUpdated}>
+            {!sitemapUpdated ? " עדכן את ה-SITEMAP" : "ה-SITEMAP עודכן"}
+          </Button>
+          {/* <span className="cursor-pointer">
+            {!sitemapUpdated ? " עדכן את הSITEMAP" : "הSITEMAP עודכן"}
+          </span> */}
+        </div>
+      )}
       {updateUserSuccess && (
         <Alert color="success" className="mt-5">
           {updateUserSuccess}

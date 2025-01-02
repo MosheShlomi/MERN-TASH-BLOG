@@ -42,7 +42,7 @@ const Home = () => {
         </p>
 
         <Button gradientDuoTone="greenToBlue" size="lg">
-          <Link to="/search">לצפיה בכל הפוסטים</Link>
+          <Link to="/posts">לצפיה בכל הפוסטים</Link>
         </Button>
       </div>
 
@@ -64,7 +64,7 @@ const Home = () => {
 
             <div className="flex justify-center ">
               <Button gradientDuoTone="greenToBlue" size="md">
-                <Link to="/search">לצפיה בכל הפוסטים</Link>
+                <Link to="/posts">לצפיה בכל הפוסטים</Link>
               </Button>
             </div>
           </div>

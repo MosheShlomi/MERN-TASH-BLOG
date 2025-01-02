@@ -6,7 +6,6 @@ import authRoutes from "./routes/auth.route.js";
 import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import categoryRoutes from "./routes/category.route.js";
-import contactRoutes from "./routes/contact.route.js";
 import cookieParser from "cookie-parser";
 import path from 'path';
 
@@ -32,7 +31,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/comment", commentRoutes);
 app.use("/api/category", categoryRoutes);
-app.use("/api/contact", contactRoutes);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, "client", "dist", 'index.html'));

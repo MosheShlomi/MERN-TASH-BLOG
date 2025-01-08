@@ -30,7 +30,7 @@ function CallToAction() {
       </div>
       <div className="p-7 flex-1 flex justify-center items-center">
         <a
-          className="w-full"
+          className=""
           href="https://www.bitpay.co.il/app/me/43112273-B5AA-2FFC-4166-E1595CD325268000"
           target="_blank"
           rel="noopener noreferrer">

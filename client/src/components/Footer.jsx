@@ -117,10 +117,10 @@ const FooterComponent = () => {
             year={new Date().getFullYear()}
           />
           <div className="flex gap-6 mt-4 sm:mt-0">
-            <Footer.Icon
-              href="https://www.linkedin.com/in/moshe-shlomi/"
+            {/* <Footer.Icon
+              href=""
               icon={BsLinkedin}
-            />
+            /> */}
             {/* <Footer.Icon href="https://facebook.com" icon={BsFacebook} /> */}
             {/* <Footer.Icon href="https://instagram.com" icon={BsInstagram} />
             <Footer.Icon

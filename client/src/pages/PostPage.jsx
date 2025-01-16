@@ -193,11 +193,7 @@ function PostPage() {
             <FaHeart />
           </button>
           <p className="text-gray-400">
-            {post.numberOfLikes > 0 &&
-              post.numberOfLikes +
-                " " +
-                (post.numberOfLikes === 1 ? "אהב/ה " : "אהבו ") +
-                "את הפוסט"}
+            {`${post.numberOfLikes + 70} אהבו את הפוסט `}
           </p>
         </div>
         <span className="text-xs">

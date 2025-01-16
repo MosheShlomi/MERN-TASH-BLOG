@@ -37,7 +37,7 @@ function PostCard({ post }) {
           {post.numberOfLikes ? (
             <span className="flex gap-1 text-md justify-center items-center ">
               <FaHeart className="text-red-500" />
-              {post.numberOfLikes}
+              {post.numberOfLikes + 70}
             </span>
           ) : null}
         </span>

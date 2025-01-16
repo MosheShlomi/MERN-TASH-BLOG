@@ -126,6 +126,21 @@ function PostPreviewPage() {
     }
   };
 
+  const calculateTotalLikes = (post) => {
+    const createdDate = new Date(post.createdAt);
+    const today = new Date();
+
+    const diffInDays = Math.floor(
+      (today - createdDate) / (1000 * 60 * 60 * 24)
+    );
+
+    const dailyIncrement = 2;
+
+    const initialLikes = post.title.length * 2;
+
+    return post.numberOfLikes + initialLikes + diffInDays * dailyIncrement;
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -214,7 +229,7 @@ function PostPreviewPage() {
             <FaHeart />
           </button>
           <p className="text-gray-400">
-            {`${post.numberOfLikes + 70} אהבו את הפוסט `}
+            {`${calculateTotalLikes(post)} אהבו את הפוסט `}
           </p>
         </div>
         <span className="text-xs">

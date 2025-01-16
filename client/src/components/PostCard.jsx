@@ -3,6 +3,21 @@ import { Link } from "react-router-dom";
 import { FaHeart } from "react-icons/fa";
 
 function PostCard({ post }) {
+  const calculateTotalLikes = () => {
+    const createdDate = new Date(post.createdAt);
+    const today = new Date();
+
+    const diffInDays = Math.floor(
+      (today - createdDate) / (1000 * 60 * 60 * 24)
+    );
+
+    const dailyIncrement = 2;
+
+    const initialLikes = post.title.length * 2;
+
+    return post.numberOfLikes + initialLikes + diffInDays * dailyIncrement;
+  };
+
   return (
     <div className="group relative w-full border border-teal-500 hover:border-2 transition-all sm:h-[380px] h-[400px] overflow-hidden rounded-lg sm:w-[370px]">
       <Link to={`/post/${post.slug}`}>
@@ -37,7 +52,7 @@ function PostCard({ post }) {
           {post.numberOfLikes ? (
             <span className="flex gap-1 text-md justify-center items-center ">
               <FaHeart className="text-red-500" />
-              {post.numberOfLikes + 70}
+              {calculateTotalLikes()}
             </span>
           ) : null}
         </span>

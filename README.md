@@ -71,3 +71,10 @@ The blog creates a space where soldiers can support one another by sharing insig
 ## 🌐 Live Demo
 
 Check out the live demo on the internet - [Tash Blog](https://tash-blog.com/) or just search **תש בלוג** in Google.
+
+
+## 📂 Blog Template
+
+I have also created a **blog template** in MERN-BLOG-TEMPLATE branch that anyone can use to deploy their own blog easily.  
+You can check it out and customize it to fit your needs! 
+The **MERN-BLOG-TEMPLATE** branch has its own README file, so please check there for more details.

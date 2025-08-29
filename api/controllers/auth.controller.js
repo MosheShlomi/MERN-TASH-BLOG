@@ -41,13 +41,20 @@ export const signIn = async (req, res, next) => {
         const token = jwt.sign(
             { id: validUser._id, isAdmin: validUser.isAdmin },
             process.env.JWT_SECRET,
+            { expiresIn: "2d" }
         );
 
         const { password: pass, ...rest } = validUser._doc;
 
-        res.status(200).cookie("access_token", token, {
-            httpOnly: true
-        }).json(rest);
+        res.status(200)
+            .cookie("access_token", token, {
+                httpOnly: true,
+                maxAge: 2 * 24 * 60 * 60 * 1000,
+                sameSite: "strict",
+                secure: process.env.NODE_ENV === "production",
+            })
+            .json(rest);
+
     } catch (err) {
         next(err);
     }
@@ -59,13 +66,18 @@ export const google = async (req, res, next) => {
     try {
         const user = await User.findOne({ email });
         if (user) {
-            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET);
+            const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin }, process.env.JWT_SECRET, { expiresIn: "2d" });
             const { password, ...rest } = user._doc;
 
 
-            res.status(200).cookie("access_token", token, {
-                httpOnly: true
-            }).json(rest);
+            res.status(200)
+                .cookie("access_token", token, {
+                    httpOnly: true,
+                    maxAge: 2 * 24 * 60 * 60 * 1000,
+                    sameSite: "strict",
+                    secure: process.env.NODE_ENV === "production",
+                })
+                .json(rest);
         } else {
             const generatedPassword = Math.random().toString(36).slice(-8) + Math.random().toString(36).slice(-8);
             const hashedPassword = bcryptjs.hashSync(generatedPassword, 10);
@@ -79,15 +91,35 @@ export const google = async (req, res, next) => {
             });
             await newUser.save();
 
-            const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET);
+            const token = jwt.sign({ id: newUser._id, isAdmin: newUser.isAdmin }, process.env.JWT_SECRET, { expiresIn: "2d" });
             const { password, ...rest } = newUser._doc;
 
 
-            res.status(200).cookie("access_token", token, {
-                httpOnly: true
-            }).json(rest);
+            res.status(200)
+                .cookie("access_token", token, {
+                    httpOnly: true,
+                    maxAge: 2 * 24 * 60 * 60 * 1000,
+                    sameSite: "strict",
+                    secure: process.env.NODE_ENV === "production",
+                })
+                .json(rest);
         }
     } catch (err) {
 
     }
+};
+
+export const checkSession = (req, res, next) => {
+    const token = req.cookies.access_token;
+    if (!token) {
+        return res.status(401).json({ success: false, message: "Not authenticated" });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        if (err) {
+            return res.status(401).json({ success: false, message: "Token expired or invalid" });
+        }
+
+        res.status(200).json({ success: true, user });
+    });
 };

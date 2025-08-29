@@ -1,4 +1,4 @@
-import React from "react";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -15,8 +15,33 @@ import PostPage from "./pages/PostPage";
 import ScrollToTop from "./components/ScrollToTop";
 import Posts from "./pages/Posts";
 import PostPreviewPage from "./pages/PostPreviewPage";
+import { signOutSuccess } from "./redux/user/userSlice";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const response = await fetch("/api/auth/check", {
+          credentials: "include",
+        });
+        if (response.status === 401) {
+          dispatch(signOutSuccess());
+        }
+      } catch (err) {
+        dispatch(signOutSuccess());
+      }
+    };
+
+    checkSession();
+
+    const interval = setInterval(checkSession, 5 * 60 * 1000); // every 5 minutes
+
+    return () => clearInterval(interval);
+  }, [dispatch]);
+
   return (
     <BrowserRouter>
       <ScrollToTop />

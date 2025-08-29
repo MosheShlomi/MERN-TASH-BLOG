@@ -34,6 +34,7 @@ function Posts() {
     const fetchPosts = async () => {
       try {
         setLoading(true);
+        setShowMore(false);
         const searchQuery = urlParams.toString();
         const res = await fetch(`/api/post/get-posts?${searchQuery}`);
         if (res.ok) {
@@ -188,24 +189,28 @@ function Posts() {
         </form>
       </div>
       <div className="w-full">
-        <h1 className="text-3xl font-semibold sm:border-b border-gray-500 p-3 m-5">
-          תוצאות החיפוש
+        <h1 className="text-3xl font-semibold text-center text-gray-800 dark:text-white p-3">
+          פוסטים
         </h1>
         <div className="p-7 flex flex-wrap gap-4 justify-center">
           {!loading && posts.length === 0 && (
             <p className="text-xl text-gray-500">לא נמצאו פוסטים.</p>
           )}
           {loading && <p className="text-xl text-gray-500">טוען...</p>}
-          {!loading &&
-            posts &&
-            posts.map((post) => <PostCard key={post._id} post={post} />)}
+          {!loading && posts && (
+            <>
+              {posts.map((post) => (
+                <PostCard key={post._id} post={post} />
+              ))}
 
-          {showMore && (
-            <button
-              className="text-teal-500 text-lg hover:underline p-7 w-full"
-              onClick={handleShowMore}>
-              הצג עוד
-            </button>
+              {showMore && (
+                <button
+                  className="text-teal-500 text-lg hover:underline p-7 w-full"
+                  onClick={handleShowMore}>
+                  הצג עוד
+                </button>
+              )}
+            </>
           )}
         </div>
       </div>

@@ -7,7 +7,7 @@ import { errorHandler } from "../utils/error.js";
 const parsePagination = (query) => ({
     startIndex: parseInt(query.startIndex) || 0,
     limit: parseInt(query.limit) || 9,
-    sortDirection: query.order === "asc" ? 1 : -1,
+    sortDirection: query.sort === "asc" ? 1 : -1,
 });
 
 const generateSlug = (title) => title
@@ -84,6 +84,7 @@ const buildPostFilters = async (query) => {
 export const getPosts = async (req, res, next) => {
     try {
         const { startIndex, limit, sortDirection } = parsePagination(req.query);
+        console.log(startIndex, limit, sortDirection)
         const filters = await buildPostFilters(req.query);
 
         const now = new Date();

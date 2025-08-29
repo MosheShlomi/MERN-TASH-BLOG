@@ -6,38 +6,38 @@
                 <priority>1</priority>
                 
             </url>
-            
+
             <url>
-                <loc>https://tash-blog.com/about</loc>
+                <loc>https://tash-blog.com/posts</loc>
                 <priority>0.8</priority>
-                
-            </url>
-            
-            <url>
-                <loc>https://tash-blog.com/sign-up</loc>
-                <priority>0.5</priority>
                 
             </url>
             
             <url>
                 <loc>https://tash-blog.com/sign-in</loc>
-                <priority>0.5</priority>
+                <priority>0.3</priority>
                 
             </url>
             
             <url>
                 <loc>https://tash-blog.com/contact</loc>
-                <priority>0.8</priority>
+                <priority>0.6</priority>
+                
+            </url>
+
+            <url>
+                <loc>https://tash-blog.com/sign-up</loc>
+                <priority>0.3</priority>
+                
+            </url>
+
+            <url>
+                <loc>https://tash-blog.com/about</loc>
+                <priority>0.6</priority>
                 
             </url>
             
-            <url>
-                <loc>https://tash-blog.com/posts</loc>
-                <priority>0.7</priority>
-                
-            </url>
-            
-            <url>
+            <!-- <url>
                 <loc>https://tash-blog.com/post/סיבוס--תווי-קניה-כסף-בחוגר</loc>
                 <priority>0.6</priority>
                 <lastmod>Thu Jan 02 2025 09:35:46 GMT+0200 (שעון ישראל (חורף))</lastmod>
@@ -77,6 +77,6 @@
                 <loc>https://tash-blog.com/post/מענק-נישואין</loc>
                 <priority>0.6</priority>
                 <lastmod>Thu Jan 02 2025 09:26:13 GMT+0200 (שעון ישראל (חורף))</lastmod>
-            </url>
+            </url> -->
             
         </urlset>

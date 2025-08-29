@@ -84,7 +84,6 @@ const buildPostFilters = async (query) => {
 export const getPosts = async (req, res, next) => {
     try {
         const { startIndex, limit, sortDirection } = parsePagination(req.query);
-        console.log(startIndex, limit, sortDirection)
         const filters = await buildPostFilters(req.query);
 
         const now = new Date();

@@ -162,7 +162,7 @@ function PostPage() {
           post.category.map((cat) => (
             <Link
               to={`/posts?category=${cat.name}`}
-              className="self-center mt-2">
+              className="self-center mt-2" key={cat._id}>
               <Button color="gray" pill size="xs">
                 {cat.name}
               </Button>
